@@ -182,6 +182,8 @@ def get_recent_papers(
 
 
 def fetch_html_content(url: str) -> Optional[BeautifulSoup]:
+    if "http:" in url:
+        url = url.replace("http:", "https:")
     if "arxiv" not in url:
         return None
     elif "abs" in url:
@@ -192,8 +194,10 @@ def fetch_html_content(url: str) -> Optional[BeautifulSoup]:
         html_url = url
 
     try:
-        response = requests.get(html_url, timeout=60)
+        print("正在获取html内容：", html_url)
+        response = requests.get(html_url, timeout=10)
         if response.status_code == 200:
+            print("获取html内容成功")
             return BeautifulSoup(response.text, "lxml")
     except Exception:
         return None

@@ -83,6 +83,11 @@ cd scripts
 cd werewolf
 bash run_simulation.sh
 ```
+```bash
+# for research
+pip install lxml
+pip install ruamel.yaml
+```
 
 #### New branch for each feature
 
