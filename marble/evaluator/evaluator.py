@@ -38,8 +38,8 @@ class Evaluator:
             "agent_kpis": {},
             "code_quality": {}
         }
-        # TODO 修改路径
-        with open('/home/ubuntu/xp/app/MultiAgentBench/marble/evaluator/evaluator_prompts.json', 'r', encoding='utf-8') as f:
+        # 评估路径
+        with open('marble/evaluator/evaluator_prompts.json', 'r', encoding='utf-8') as f:
             self.evaluation_prompts = json.load(f)
 
         evaluate_llm_config = self.metrics_config.get('evaluate_llm', {})
@@ -159,8 +159,9 @@ class Evaluator:
         milestones = self.parse_milestones(result.content)
         # Update the metrics
         self.metrics["total_milestones"] += len(milestones)
+        self.logger.debug(f"KPI Milestones: {milestones}")
         for milestone in milestones:
-            agents = milestone.get("contributing_agents", [])
+            agents = milestone.get("agents", [])
             for agent_id in agents:
                 if agent_id in self.metrics["agent_kpis"]:
                     self.metrics["agent_kpis"][agent_id] += 1
@@ -208,9 +209,20 @@ class Evaluator:
             result (str): The final world idea.
         """
         # change the prompt to evaluate buyer and seller
-        # world_prompt_template = self.evaluation_prompts["world"]["task_evaluation"]["buyer_prompt"]
-        world_prompt_template = self.evaluation_prompts["world"]["task_evaluation"]["seller_prompt"]
-        prompt = world_prompt_template.format(task=task, result=result)
+        self.__evaluate_task_world_person(task, result, "buyer")
+        self.__evaluate_task_world_person(task, result, "seller")
+
+    def __evaluate_task_world_person(self, task: str, result: str, person: str) -> None:
+        """
+        Evaluate the final world idea based on Effectiveness of Strategies, Progress and Outcome and Interaction Dynamics For Different Persons
+        """
+        if person == "buyer":
+            prompt_template = self.evaluation_prompts["world"]["task_evaluation"]["buyer_prompt"]
+        elif person == "seller":
+            prompt_template = self.evaluation_prompts["world"]["task_evaluation"]["seller_prompt"]
+        else:
+            raise ValueError(f"Invalid person: {person}")
+        prompt = prompt_template.format(task=task, result=result)
 
         llm_response = model_prompting(
             llm_model=self.llm,
@@ -223,10 +235,11 @@ class Evaluator:
         )[0]
 
         ratings = self.parse_task_world_evaluation(llm_response.content)
-
-        self.metrics["task_evaluation"]["buyer"] = ratings["buyer"]
-        self.metrics["task_evaluation"]["seller"] = ratings["seller"]
-
+        self.logger.info(f"Parse task world ratings for {person}: {ratings}")
+        if person == "buyer":
+            self.metrics["task_evaluation"]["buyer"] = ratings["buyer"]
+        elif person == "seller":
+            self.metrics["task_evaluation"]["seller"] = ratings["seller"]
 
     def parse_task_world_evaluation(self, llm_response: str) -> Dict[str, Any]:
         """
@@ -255,6 +268,7 @@ class Evaluator:
         try:
             match = re.search(r'\{[\s\S]*\}', llm_response)
             if not match:
+                self.logger.error("Failed to find JSON in LLM evaluation.")
                 return default_ratings
 
             json_str = match.group(0)
@@ -280,6 +294,7 @@ class Evaluator:
             return parsed_ratings
 
         except (json.JSONDecodeError, KeyError, ValueError):
+            self.logger.error("Failed to parse task world ratings.")
             return default_ratings  # 解析失败则返回默认评分
 
     def evaluate_task_db(self, task: str, result: str, labels: List[str], pred_num: int, root_causes: List[str]) -> None:

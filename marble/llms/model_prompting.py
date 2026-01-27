@@ -4,7 +4,9 @@ from beartype.typing import Any, Dict, List, Optional
 from litellm.types.utils import Message
 
 from marble.llms.error_handler import api_calling_error_exponential_backoff
+from marble.utils import get_logger
 
+logger = get_logger("LLM_CALL")
 
 @beartype
 @api_calling_error_exponential_backoff(retries=5, base_wait_time=1)
@@ -26,21 +28,35 @@ def model_prompting(
     # litellm.set_verbose=True
     if "together_ai/TA" in llm_model:
         base_url = "https://api.ohmygpt.com/v1"
+    elif "deepseek" in llm_model:
+        base_url = "https://api.deepseek.com/v1"
     else:
         base_url = None
-    completion = litellm.completion(
-        model=llm_model,
-        messages=messages,
-        max_tokens=max_token_num,
-        n=return_num,
-        top_p=top_p,
-        temperature=temperature,
-        stream=stream,
-        tools=tools,
-        tool_choice=tool_choice,
-        base_url=base_url,
-    )
-    message_0: Message = completion.choices[0].message
-    assert message_0 is not None
-    assert isinstance(message_0, Message)
-    return [message_0]
+    try:
+        MAX_LENGTH = 350000
+        max_token_num = 4096
+        # logger.info(f"大模型输入: {messages}")
+        for msg in messages:
+            if len(msg["content"]) > MAX_LENGTH:
+                logger.info(f"大模型输入过大，正在压缩: {msg['content']}")
+                msg["content"] = msg["content"][:MAX_LENGTH] + '...'
+        completion = litellm.completion(
+            model=llm_model,
+            messages=messages,
+            max_tokens=max_token_num,
+            n=return_num,
+            top_p=top_p,
+            temperature=temperature,
+            stream=stream,
+            tools=tools,
+            tool_choice=tool_choice,
+            base_url=base_url,
+        )
+        # logger.info(f"大模型输出: {completion}")
+        message_0: Message = completion.choices[0].message
+        assert message_0 is not None
+        assert isinstance(message_0, Message)
+        return [message_0]
+    except Exception as e:
+        logger.info(f"【错误】请求大模型 - {str(e)}")
+        raise e

@@ -25,6 +25,7 @@ def get_logger(name: str) -> logging.Logger:
         stream_handler = logging.StreamHandler()
         stream_handler.setFormatter(formatter)
         file_handler = RotatingFileHandler(
+            # 日志路径
             "logs/app.log", maxBytes=10485760, backupCount=5
         )
         file_handler.setFormatter(formatter)

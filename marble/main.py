@@ -60,6 +60,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     # TODO 配置环境变量
-    os.environ["DEEPSEEK_API_KEY"] = "sk-62331370bfcd44ba954b6aef6a3f3c5d"
     logging.basicConfig(level=logging.INFO)
     main()

@@ -291,6 +291,7 @@ class BaseAgent:
         output = "Result from the model:" + result_content + "\n"
         if result_from_function_str:
             output += "Result from the function:" + result_from_function_str
+        self.logger.info(f"communication: {communication}")
         return output, communication
 
     def _calculate_token_usage(self, task: str, result: str) -> int:
@@ -377,7 +378,7 @@ class BaseAgent:
                     else:
                         seralized_msg += f"From {target_agent_id} to {self.agent_id}: "
                     seralized_msg += msg_content + "\n"
-
+        self.logger.info(f"Serialized message: {seralized_msg}")
         return seralized_msg
 
     def get_profile(self) -> Union[str, Any]:
@@ -415,6 +416,7 @@ class BaseAgent:
             target_agent_id, message, session_id
         )
         if not initial_communication["success"]:
+            self.logger.error(f"{self.agent_id} to {target_agent_id} communication failed")
             return initial_communication
         assert (
             self.agent_graph is not None
@@ -459,6 +461,7 @@ class BaseAgent:
                 f"You are talking to {session_other_agent_id}. You cannot talk with anyone else.\n"
                 f"From {session_current_agent_id} to {session_other_agent_id}:"
             )
+            self.logger.info(f"New communication: {session_current_agent_id} to {session_other_agent_id}")
             result = model_prompting(
                 llm_model=self.llm,
                 messages=[
@@ -511,6 +514,7 @@ class BaseAgent:
             f"These are an chat history: {session_current_agent.seralize_message(session_id=self.session_id)}\n"
             f"Please summarize information in the chat history relevant to the task: {task}."
         )
+        self.logger.info(f"Summary communication start")
         result = model_prompting(
             llm_model=self.llm,
             messages=[
@@ -562,6 +566,7 @@ class BaseAgent:
             Dict[str, Any]: Result of the communication attempt
         """
         old_session_id = self.session_id
+        self.logger.info(f"{self.agent_id} to {target_agent_id} communication started")
         try:
             self.session_id = session_id
             linked_by_graph = False
