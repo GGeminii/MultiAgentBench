@@ -5,8 +5,9 @@ import subprocess
 from typing import Any, Dict
 
 from marble.llms.model_prompting import model_prompting
+from marble.utils import coding_config_util
 
-
+CONFIG = coding_config_util.read_coding_config()
 def extract_python_code(content: str) -> str:
     """
     Extracts Python code from a string that may contain Markdown-style code blocks.
@@ -28,7 +29,7 @@ def extract_python_code(content: str) -> str:
 
 
 def run_and_debug_solution_handler(
-    env, model_name: str, file_path: str = "solution.py"
+    env, file_path: str = "solution.py"
 ) -> Dict[str, Any]:
     """
     Runs the solution.py file, captures any errors, and uses model_prompting to suggest fixes if errors occur.
@@ -36,13 +37,13 @@ def run_and_debug_solution_handler(
 
     Args:
         env: The environment instance
-        model_name (str): Name of the LLM model to use
         file_path (str): File path, defaults to solution.py
 
     Returns:
         Dict[str, Any]: Result of the operation containing run status and suggestions if applicable
     """
     try:
+        model_name = CONFIG["llm"]
         full_path = os.path.join(env.workspace_dir, os.path.basename(file_path))
         error_path = os.path.join(env.workspace_dir, "error.json")
 
@@ -162,10 +163,6 @@ def register_debugger_actions(env):
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "model_name": {
-                            "type": "string",
-                            "description": "Name of the LLM model to use (e.g., 'gpt-3.5-turbo', 'gpt-4')",
-                        },
                         "file_path": {
                             "type": "string",
                             "description": "Path of the solution file to run and debug (optional, defaults to 'solution.py')",

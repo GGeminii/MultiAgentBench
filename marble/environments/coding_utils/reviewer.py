@@ -7,8 +7,9 @@ from typing import Any, Dict
 from ruamel.yaml import YAML
 
 from marble.llms.model_prompting import model_prompting
+from marble.utils import coding_config_util
 
-
+CONFIG = coding_config_util.read_coding_config()
 def log_debug_info(message: str, log_file: str = "marble/logs/advice_log"):
     """
     Log debug information to a specified file.
@@ -22,7 +23,7 @@ def log_debug_info(message: str, log_file: str = "marble/logs/advice_log"):
 
 
 def give_advice_and_revise_handler(
-    env, task_description: str, model_name: str
+    env, task_description: str
 ) -> Dict[str, Any]:
     """
     Reads solution.py content, provides improvement suggestions based on task description, and revises the code accordingly.
@@ -30,12 +31,12 @@ def give_advice_and_revise_handler(
     Args:
         env: The environment instance.
         task_description (str): Task description (not used, will read from config).
-        model_name (str): Name of the LLM model to use.
 
     Returns:
         Dict[str, Any]: Result of the operation containing advice and revised code.
     """
     try:
+        model_name=CONFIG["llm"]
         full_path = os.path.join(env.workspace_dir, "solution.py")
 
         if not os.path.exists(full_path):
@@ -55,19 +56,7 @@ def give_advice_and_revise_handler(
                 "success": False,
                 "error-msg": "Solution file is empty or contains invalid code. Please use create_solution first to generate valid code",
             }
-
-        config_path = "marble/configs/coding_config/coding_config.yaml"
-        if not os.path.exists(config_path):
-            return {
-                "success": False,
-                "error-msg": f"Config file not found at {config_path}",
-            }
-
-        yaml = YAML()
-        with open(config_path, "r", encoding="utf-8") as f:
-            config = yaml.load(f)
-
-        full_task_description = config["task"]["content"]
+        full_task_description = CONFIG["task"]["content"]
 
         requirements_start = "1. Implementation requirements:\n"
         requirements_end = "\n\n2. Project structure:"
@@ -265,11 +254,6 @@ def register_reviewer_actions(env):
                         "task_description": {
                             "type": "string",
                             "description": "Description of the task (will be read from config file)",
-                        },
-                        "model_name": {
-                            "type": "string",
-                            "description": "Name of the LLM model to use",
-                            "default": "gpt-3.5-turbo",
                         },
                     },
                     "required": ["task_description", "model_name"],

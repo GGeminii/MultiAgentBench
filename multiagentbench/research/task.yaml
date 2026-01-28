@@ -147,13 +147,13 @@ environment:
   max_iterations: 5
   name: Research Collaboration Environment
   type: Research
-llm: deepseek/deepseek-chat
+llm: openrouter/openai/gpt-oss-120b
 memory:
   type: BaseMemory
 metrics:
   diversity_of_perspectives: true
   engagement_level: true
-  evaluate_llm: deepseek/deepseek-chat
+  evaluate_llm: openrouter/openai/gpt-oss-120b
   relevance: true
 output:
   file_path: result/research_output.jsonl

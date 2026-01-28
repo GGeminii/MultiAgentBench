@@ -13,8 +13,9 @@ from marble.agent import BaseAgent
 from marble.environments import BaseEnvironment
 from marble.llms.model_prompting import model_prompting
 from marble.utils.logger import get_logger
+from marble.utils import coding_config_util
 
-
+CODING_CONFIG = coding_config_util.read_coding_config()
 class Evaluator:
     """
     Evaluator class for tracking metrics like task completion success rate and token consumption.
@@ -522,21 +523,12 @@ class Evaluator:
                 "quality": 1
             }
 
-    def evaluate_code_quality(self, task: str, code_result: str) -> None:
+    def evaluate_code_quality(self) -> None:
         """
         Evaluate the code quality based on stricter criteria.
         """
         try:
-            config_path = "marble/configs/coding_config/coding_config.yaml"
-            if not os.path.exists(config_path):
-                self.logger.error("Config file not found")
-                return
-
-            yaml = YAML()
-            with open(config_path, 'r', encoding='utf-8') as f:
-                config = yaml.load(f)
-
-            full_task_description = config['task']['content']
+            full_task_description = CODING_CONFIG['task']['content']
 
             requirements_start = "1. Implementation requirements:\n"
             requirements_end = "\n\n2. Project structure:"
@@ -551,45 +543,7 @@ class Evaluator:
                 with open(solution_path, 'r', encoding='utf-8') as f:
                     solution_content = f.read()
 
-            code_quality_prompt_template = """
-                    [Context]
-                    **Task Description:**
-                    {task_description}
-
-                    **Implementation Requirements:**
-                    {requirements}
-
-                    **Current Solution:**
-                    {solution}
-
-                    [System]
-                    This evaluation requires strict scoring and deduction. The scores should not be generous, and deductions should be applied for every issue found.
-
-                    ### **Evaluation Criteria**
-                    1. **Instruction-Following:** Does the code fulfill all the requirements of the task? Deduct points for unmet or partially met requirement from the task instructions.
-                    2. **Executability:** Is the code syntactically correct and executable? Deduct points for any syntax errors, missing imports, or runtime errors.
-                    3. **Consistency:** Is the code consistent in variable naming, formatting, and logic? Deduct points for inconsistent variable naming, formatting issues, or contradictory logic.
-                    4. **Quality:** Is the code well-documented, clear, and modular? Deduct points for poor documentation, unclear logic, or lack of modular design.
-
-                    ### **Scoring**
-                    - **1 point:** Below Average - Significant issues that need addressing.
-                    - **2 points:** Average - Noticeable areas for improvement.
-                    - **3 points:** Good - Minor issues or improvements needed.
-                    - **4 points:** Excellent - Almost or fully satisfies the criterion.
-                    - **5 points:** Legendary - Flawless, perfectly satisfies the criterion, and exceeds expectations.
-
-                    **Do not give the same scores for different criteria, such as 3 for instruction-following, 3 for executability, 3 for consistency, and 3 for quality.**
-                    If you give the same scores for the 4 criteria, you have to add or deduct 1 point randomly for one or two criteria.
-
-                    ### **Question**
-                    Based on the criteria, evaluate the code and output the scores for each criterion in the following JSON format:
-                    {{
-                        "instruction_following": score,
-                        "executability": score,
-                        "consistency": score,
-                        "quality": score
-                    }}
-            """
+            code_quality_prompt_template = self.evaluation_prompts["coding"]["code_quality"]
 
             # Fill in the template
             prompt = code_quality_prompt_template.format(

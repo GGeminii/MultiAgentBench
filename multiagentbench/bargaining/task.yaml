@@ -108,7 +108,7 @@ agents:
     \ persuade buyers of the value inherent in what I offer, all while remaining respectful\
     \ of individual buyer needs and negotiations dynamics."
   role: seller
-  llm: openrouter/openai/gpt-oss-120b
+  llm: openrouter/qwen/qwen3-32b
 - type: BaseAgent
   agent_id: agent2
   profile: "### Negotiation Strategy Summary\n\nAs a seller in a multi-party bargaining\
@@ -156,7 +156,7 @@ agents:
     \ navigate the multi-party bargaining landscape and achieve mutually beneficial\
     \ agreements with buyers."
   role: seller
-  llm: openrouter/openai/gpt-oss-120b
+  llm: openrouter/qwen/qwen3-32b
 - type: BaseAgent
   agent_id: agent3
   profile: "### Negotiation Strategy Description\n\n---\n\n#### Summary of the Strategy\n\
@@ -209,7 +209,7 @@ agents:
     \ warranty and after-sales benefits while maintaining a budget that reflects value\
     \ over pure cost."
   role: buyer
-  llm: openrouter/openai/gpt-oss-120b
+  llm: openrouter/qwen/qwen3-32b
 - type: BaseAgent
   agent_id: agent4
   profile: "### Negotiation Strategy for Timely Delivery\n\n#### Summary of Strategy\n\
@@ -258,7 +258,7 @@ agents:
     \ ensuring a successful negotiation outcome that meets my objectives while fostering\
     \ positive supplier relationships."
   role: buyer
-  llm: openrouter/openai/gpt-oss-120b
+  llm: openrouter/qwen/qwen3-32b
 memory:
   type: BaseMemory
 metrics:

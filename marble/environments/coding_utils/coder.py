@@ -1,3 +1,4 @@
+import json
 import os
 import re
 from typing import Any, Dict
@@ -5,10 +6,11 @@ from typing import Any, Dict
 from ruamel.yaml import YAML
 
 from marble.llms.model_prompting import model_prompting
+from marble.utils import coding_config_util
 
-
+CONFIG = coding_config_util.read_coding_config()
 def create_solution_handler(
-    env, task_description: str, model_name: str, file_path: str = "solution.py"
+    env, task_description: str, file_path: str = "solution.py"
 ) -> Dict[str, Any]:
     """
     Creates solution.py file and generates content based on task description.
@@ -21,34 +23,22 @@ def create_solution_handler(
     Args:
         env: The environment instance.
         task_description (str): Task description.
-        model_name (str): Name of the LLM model to use.
         file_path (str): File path, defaults to solution.py.
 
     Returns:
         Dict[str, Any]: Result of the operation.
     """
     try:
+        model_name = CONFIG["llm"]
         file_path = "solution.py"
         full_path = os.path.join(env.workspace_dir, file_path)
 
         if os.path.exists(full_path):
             return {
                 "success": False,
-                "error-msg": f"Solution file already exists at {full_path}. Operation aborted.",
+                "info-msg": f"Solution file already exists at {full_path}. Operation aborted.",
             }
-
-        config_path = "marble/configs/coding_config/coding_config.yaml"
-        if not os.path.exists(config_path):
-            return {
-                "success": False,
-                "error-msg": f"Config file not found at {config_path}",
-            }
-
-        yaml = YAML()
-        with open(config_path, "r", encoding="utf-8") as f:
-            config = yaml.load(f)
-
-        full_task_description = config["task"]["content"]
+        full_task_description = CONFIG["task"]["content"]
 
         requirements_start = "1. Implementation requirements:\n"
         requirements_end = "\n\n2. Project structure:"
@@ -103,8 +93,8 @@ def create_solution_handler(
         return {"success": False, "error-msg": str(e)}
 
 
-#
-# def revise_solution_handler(env, task_description: str, model_name: str, file_path: str = "solution.py") -> Dict[str, Any]:
+# reviewer工具中实现代码检查
+# def revise_solution_handler(env, task_description: str, file_path: str = "solution.py") -> Dict[str, Any]:
 #     """
 #     Reads solution.py content and improves/modifies it based on task description.
 #     If advices.json exists, incorporates the suggestions into the improvement process.
@@ -112,13 +102,13 @@ def create_solution_handler(
 #     Args:
 #         env: The environment instance.
 #         task_description (str): Task description.
-#         model_name (str): Name of the LLM model to use.
 #         file_path (str): File path, defaults to solution.py.
 #
 #     Returns:
 #         Dict[str, Any]: Result of the operation.
 #     """
 #     try:
+#         model_name = CONFIG["llm"]
 #         full_path = os.path.join(env.workspace_dir, os.path.basename(file_path))
 #         advice_path = os.path.join(env.workspace_dir, "advices.json")
 #
@@ -222,11 +212,6 @@ def register_coder_actions(env):
                             "type": "string",
                             "description": "Description of the task (will be read from config file)",
                         },
-                        "model_name": {
-                            "type": "string",
-                            "description": "Name of the LLM model to use",
-                            "default": "gpt-3.5-turbo",
-                        },
                     },
                     "required": ["task_description", "model_name"],
                     "additionalProperties": False,
@@ -250,10 +235,6 @@ def register_coder_actions(env):
     #                     "task_description": {
     #                         "type": "string",
     #                         "description": "Description of the task to implement"
-    #                     },
-    #                     "model_name": {
-    #                         "type": "string",
-    #                         "description": "Name of the LLM model to use"
     #                     },
     #                     "file_path": {
     #                         "type": "string",

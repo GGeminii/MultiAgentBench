@@ -488,6 +488,16 @@ class Engine:
                 summary_data["task_evaluation"] = self.evaluator.metrics[
                     "task_evaluation"
                 ]
+            elif self.environment.name == "Coding Environment":
+                code = self._read_code_from_file("workspace/solution.py")
+                if code:
+                    self.evaluator.evaluate_code_quality()
+                    summary_data["code_quality"] = self.evaluator.metrics[
+                        "code_quality"
+                    ]
+                    self.logger.info(
+                        f"Code quality evaluation results: {self.evaluator.metrics['code_quality']}"
+                    )
             self.logger.info("Engine graph-based coordination loop completed.")
 
         except Exception:
@@ -621,9 +631,7 @@ class Engine:
             if self.environment.name == "Coding Environment":
                 code = self._read_code_from_file("MARBLE/marble/workspace/solution.py")
                 if code:
-                    self.evaluator.evaluate_code_quality(
-                        task=self.task, code_result=code
-                    )
+                    self.evaluator.evaluate_code_quality()
                     summary_data["code_quality"] = self.evaluator.metrics[
                         "code_quality"
                     ]
@@ -917,9 +925,7 @@ class Engine:
             if self.environment.name == "Coding Environment":
                 code = self._read_code_from_file("MARBLE/marble/workspace/solution.py")
                 if code:
-                    self.evaluator.evaluate_code_quality(
-                        task=self.task, code_result=code
-                    )
+                    self.evaluator.evaluate_code_quality()
                     summary_data["code_quality"] = self.evaluator.metrics[
                         "code_quality"
                     ]

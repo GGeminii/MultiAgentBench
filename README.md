@@ -88,6 +88,10 @@ bash run_simulation.sh
 pip install lxml
 pip install ruamel.yaml
 ```
+```bash
+# for coding
+pip install fire
+```
 
 #### New branch for each feature
 
