@@ -9,7 +9,7 @@ def create_file_handler(
 ) -> Dict[str, Any]:
     try:
         file_path = env._get_file_path(filename, subdir)
-        with open(file_path, "w") as f:
+        with open(file_path, "w",  encoding="utf-8") as f:
             f.write(content)
         return {
             "success": True,

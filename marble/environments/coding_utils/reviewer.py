@@ -45,7 +45,7 @@ def give_advice_and_revise_handler(
                 "error-msg": "Please use create_solution first to generate the solution file",
             }
 
-        with open(full_path, "r") as file:
+        with open(full_path, "r",  encoding="utf-8") as file:
             existing_code = file.read()
 
         if (
@@ -200,7 +200,7 @@ def give_advice_and_revise_handler(
                     )
 
         # Save modifications
-        with open(full_path, "w") as file:
+        with open(full_path, "w",  encoding="utf-8") as file:
             file.write(modified_code)
 
         # Save suggestion and strategy
@@ -216,12 +216,12 @@ def give_advice_and_revise_handler(
         advice_path = os.path.join(env.workspace_dir, "advices.json")
         if os.path.exists(advice_path):
             try:
-                with open(advice_path, "r") as f:
+                with open(advice_path, "r",  encoding="utf-8") as f:
                     existing_advices = json.load(f)
             except json.JSONDecodeError:
                 pass
         existing_advices.append(advice_data)
-        with open(advice_path, "w") as f:
+        with open(advice_path, "w",  encoding="utf-8") as f:
             json.dump(existing_advices, f, indent=2, ensure_ascii=False)
 
         return {
@@ -256,7 +256,7 @@ def register_reviewer_actions(env):
                             "description": "Description of the task (will be read from config file)",
                         },
                     },
-                    "required": ["task_description", "model_name"],
+                    "required": ["task_description"],
                     "additionalProperties": False,
                 },
             },

@@ -40,7 +40,7 @@ dig_needed = args.dig_needed
 agent_names = args.agent_names.split(",")
 task_name = args.task_name
 
-with open("../.cache/load_status.cache", "w") as f:
+with open("../.cache/load_status.cache", "w",  encoding="utf-8") as f:
     json.dump({"status": "loading"}, f, indent=4)
 
 if not os.path.exists("result"):
@@ -67,7 +67,7 @@ bot = mineflayer.createBot(
 last_time = time.time()
 start_time = None
 task_data = None
-with open("../data/score.json", "w") as f:
+with open("../data/score.json", "w",  encoding="utf-8") as f:
     json.dump([], f, indent=4)
 
 complexity = 0
@@ -85,7 +85,7 @@ wait_interval = 600
 max_block_hit_rate = 0
 
 if not os.path.exists("../data/blueprint_description_all.json"):
-    with open("../data/blueprint_description_all.json", "w") as f:
+    with open("../data/blueprint_description_all.json", "w",  encoding="utf-8") as f:
         json.dump({}, f, indent=4)
 
 
@@ -93,7 +93,7 @@ def calculate_balance():
     # 计算每个agent的时间
     if not os.path.exists("../data/action_log.json"):
         return
-    with open("../data/action_log.json", "r") as f:
+    with open("../data/action_log.json", "r",  encoding="utf-8") as f:
         data = json.load(f)
     agent_time = []
     for name, actions in data.items():
@@ -251,7 +251,7 @@ def handleViewer(*args):
             bot.chat(f"/setblock {x} {y} {z} air")
 
     def core(select_idx):
-        with open("../data/building_blue_print.json", "r") as f:
+        with open("../data/building_blue_print.json", "r",  encoding="utf-8") as f:
             blue_prints = json.load(f)
 
         # select_idx, select_idx-1, select_idx+1 clear and render
@@ -269,7 +269,7 @@ def handleViewer(*args):
 
         task(blue_prints[select_idx])
 
-        with open("../.cache/load_status.cache", "w") as f:
+        with open("../.cache/load_status.cache", "w",  encoding="utf-8") as f:
             json.dump({"status": "loaded"}, f, indent=4)
 
         global start_time
@@ -298,7 +298,7 @@ def handleViewer(*args):
             b["position"][1] += y_b
             blocks_list.append(b)
         task_data["blocks"] = blocks_list
-        with open("../data/map.json", "w") as f:
+        with open("../data/map.json", "w",  encoding="utf-8") as f:
             json.dump(task_data, f, indent=4)
 
         if dig_needed:
@@ -320,7 +320,7 @@ def handleViewer(*args):
         assert "task_" + str(select_idx) in blueprint_description_all.keys()
 
         string_list = blueprint_description_all["task_" + str(select_idx)]
-        with open("../data/map_description.json", "w") as f:
+        with open("../data/map_description.json", "w",  encoding="utf-8") as f:
             json.dump(string_list, f, indent=4)
         global complexity, max_action_time, max_time
         complexity = measure_complexity(task_data, dig_needed=dig_needed)
@@ -734,7 +734,7 @@ def handleViewer(*args):
                     shutil.rmtree(os.path.join("result", task_name))
                     os.mkdir(os.path.join("result", task_name))
                 with open(
-                    os.path.join(os.path.join("result", task_name), "score.json"), "w"
+                    os.path.join(os.path.join("result", task_name), "score.json"), "w",  encoding="utf-8"
                 ) as f:
                     json.dump(
                         {
@@ -759,7 +759,7 @@ def handleViewer(*args):
                     "../data/tokens.json",
                     os.path.join(os.path.join("result", task_name), "tokens.json"),
                 )
-                with open("../.cache/load_status.cache", "w") as f:
+                with open("../.cache/load_status.cache", "w",  encoding="utf-8") as f:
                     json.dump({"status": "end"}, f, indent=4)
 
             if (
@@ -777,7 +777,7 @@ def handleViewer(*args):
                     shutil.rmtree(os.path.join("result", task_name))
                     os.mkdir(os.path.join("result", task_name))
                 with open(
-                    os.path.join(os.path.join("result", task_name), "score.json"), "w"
+                    os.path.join(os.path.join("result", task_name), "score.json"), "w",  encoding="utf-8"
                 ) as f:
                     json.dump(
                         {
@@ -794,7 +794,7 @@ def handleViewer(*args):
                         f,
                         indent=4,
                     )
-                with open("../.cache/load_status.cache", "w") as f:
+                with open("../.cache/load_status.cache", "w",  encoding="utf-8") as f:
                     json.dump({"status": "end"}, f, indent=4)
 
             if (
@@ -816,7 +816,7 @@ def handleViewer(*args):
                     shutil.rmtree(os.path.join("result", task_name))
                     os.mkdir(os.path.join("result", task_name))
                 with open(
-                    os.path.join(os.path.join("result", task_name), "score.json"), "w"
+                    os.path.join(os.path.join("result", task_name), "score.json"), "w",  encoding="utf-8"
                 ) as f:
                     json.dump(
                         {
@@ -833,7 +833,7 @@ def handleViewer(*args):
                         f,
                         indent=4,
                     )
-                with open("../.cache/load_status.cache", "w") as f:
+                with open("../.cache/load_status.cache", "w",  encoding="utf-8") as f:
                     json.dump({"status": "end"}, f, indent=4)
 
             if (
@@ -856,7 +856,7 @@ def handleViewer(*args):
                     shutil.rmtree(os.path.join("result", task_name))
                     os.mkdir(os.path.join("result", task_name))
                 with open(
-                    os.path.join(os.path.join("result", task_name), "score.json"), "w"
+                    os.path.join(os.path.join("result", task_name), "score.json"), "w",  encoding="utf-8"
                 ) as f:
                     json.dump(
                         {
@@ -873,10 +873,10 @@ def handleViewer(*args):
                         f,
                         indent=4,
                     )
-                with open("../.cache/load_status.cache", "w") as f:
+                with open("../.cache/load_status.cache", "w",  encoding="utf-8") as f:
                     json.dump({"status": "end"}, f, indent=4)
 
-            with open("../.cache/heart_beat.cache", "w") as f:
+            with open("../.cache/heart_beat.cache", "w",  encoding="utf-8") as f:
                 json.dump({"time": now_time}, f, indent=4)
 
         if now_time - last_time > 10 and task_data:
@@ -904,7 +904,7 @@ def handleViewer(*args):
                     "view_hit_rate": view_hit_rate,
                 }
             )
-            with open("../data/score.json", "w") as f:
+            with open("../data/score.json", "w",  encoding="utf-8") as f:
                 json.dump(score, f, indent=4)
 
             last_time = now_time

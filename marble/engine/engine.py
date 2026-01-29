@@ -265,7 +265,7 @@ class Engine:
             iteration_data["communications"] = communications
             # Summarize outputs and update planner for the initial assignment
             summary = self._summarize_results(agents_results)
-            self.logger.info(f"Iteration {self.current_iteration} Summary:\n{summary}")
+            self.logger.info(f"Iteration {self.current_iteration + 1} Summary:\n{summary}")
             summary_from_planner = self.planner.summarize_output(
                 summary, self.task, self.output_format
             )
@@ -304,7 +304,7 @@ class Engine:
             # Decide whether to continue or terminate after initial assignment
             if isinstance(self.environment, MinecraftEnvironment):
                 try:
-                    with open("../data/score.json", "r") as f:
+                    with open("../data/score.json", "r",  encoding="utf-8") as f:
                         block_hit_rate = json.load(f)[-1]["block_hit_rate"]
                 except:
                     block_hit_rate = 0.0
@@ -317,7 +317,7 @@ class Engine:
             iteration_data["continue_simulation"] = continue_simulation
             # Record iteration data
             summary_data["iterations"].append(iteration_data)
-            self.logger.info(f"iteration {self.current_iteration} Evaluator results: {self.evaluator.metrics}")
+            self.logger.info(f"iteration {self.current_iteration + 1} Evaluator results: {self.evaluator.metrics}")
             # decide the next step
             if not continue_simulation:
                 self.logger.info(
@@ -384,7 +384,7 @@ class Engine:
                 iteration_data["communications"] = communications
                 # Summarize outputs and update planner
                 summary = self._summarize_results(agents_results)
-                self.logger.info(f"Iteration {self.current_iteration} Summary:\n{summary}")
+                self.logger.info(f"Iteration {self.current_iteration + 1} Summary:\n{summary}")
                 summary_from_planner = self.planner.summarize_output(
                     summary, self.task, self.output_format
                 )
@@ -424,7 +424,7 @@ class Engine:
                 # Decide whether to continue or terminate
                 if isinstance(self.environment, MinecraftEnvironment):
                     try:
-                        with open("../data/score.json", "r") as f:
+                        with open("../data/score.json", "r",  encoding="utf-8") as f:
                             block_hit_rate = json.load(f)[-1]["block_hit_rate"]
                     except:
                         block_hit_rate = 0.0
@@ -437,7 +437,7 @@ class Engine:
                 iteration_data["continue_simulation"] = continue_simulation
                 # Record iteration data
                 summary_data["iterations"].append(iteration_data)
-                self.logger.info(f"iteration {self.current_iteration} Evaluator results: {self.evaluator.metrics}")
+                self.logger.info(f"iteration {self.current_iteration + 1} Evaluator results: {self.evaluator.metrics}")
                 if not continue_simulation:
                     self.logger.info(
                         "EnginePlanner decided to terminate the simulation."
@@ -472,7 +472,7 @@ class Engine:
                 ]
             elif isinstance(self.environment, MinecraftEnvironment):
                 try:
-                    with open("../data/score.json", "r") as f:
+                    with open("../data/score.json", "r",  encoding="utf-8") as f:
                         block_hit_rate = json.load(f)[-1]["block_hit_rate"]
                 except:
                     block_hit_rate = 0.0
@@ -492,12 +492,12 @@ class Engine:
                 code = self._read_code_from_file("workspace/solution.py")
                 if code:
                     self.evaluator.evaluate_code_quality()
-                    summary_data["code_quality"] = self.evaluator.metrics[
-                        "code_quality"
-                    ]
-                    self.logger.info(
-                        f"Code quality evaluation results: {self.evaluator.metrics['code_quality']}"
-                    )
+                summary_data["code_quality"] = self.evaluator.metrics[
+                    "code_quality"
+                ]
+                self.logger.info(
+                    f"Code quality evaluation results: {self.evaluator.metrics['code_quality']}"
+                )
             self.logger.info("Engine graph-based coordination loop completed.")
 
         except Exception:
@@ -1111,7 +1111,7 @@ class Engine:
             "file_path", "result/discussion_output.jsonl"
         )
         try:
-            with open(file_path, "a") as jsonl_file:
+            with open(file_path, "a",  encoding="utf-8") as jsonl_file:
                 print(summary_data)
                 jsonl_file.write(json.dumps(summary_data) + "\n")
 

@@ -537,13 +537,13 @@ class Evaluator:
                 full_task_description.find(requirements_end)
             ].strip()
 
-            solution_path = "marble/workspace/solution.py"
+            solution_path = "workspace/solution.py"
             solution_content = ""
             if os.path.exists(solution_path):
                 with open(solution_path, 'r', encoding='utf-8') as f:
                     solution_content = f.read()
 
-            code_quality_prompt_template = self.evaluation_prompts["coding"]["code_quality"]
+            code_quality_prompt_template = self.evaluation_prompts["coding"]["code_quality"]["prompt"]
 
             # Fill in the template
             prompt = code_quality_prompt_template.format(

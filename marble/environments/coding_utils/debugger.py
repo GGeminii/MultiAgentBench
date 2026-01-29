@@ -51,14 +51,14 @@ def run_and_debug_solution_handler(
             return {"success": False, "error-msg": f"File not found at {full_path}"}
 
         # Extract code from solution.py
-        with open(full_path, "r") as file:
+        with open(full_path, "r",  encoding="utf-8") as file:
             code_content = file.read()
 
         # Ensure proper Python code is extracted
         python_code = extract_python_code(code_content)
 
         # Write extracted Python code back to solution.py
-        with open(full_path, "w") as file:
+        with open(full_path, "w",  encoding="utf-8") as file:
             file.write(python_code)
 
         try:
@@ -82,7 +82,7 @@ def run_and_debug_solution_handler(
             }
 
             # Save error details to error.json
-            with open(error_path, "w") as f:
+            with open(error_path, "w",  encoding="utf-8") as f:
                 json.dump(error_data, f, indent=2, ensure_ascii=False)
 
             # Use model_prompting to generate suggestions to fix the error
@@ -133,7 +133,7 @@ def run_and_debug_solution_handler(
             fixed_code = fix_response.content
 
             # Save fixed code back to the file
-            with open(full_path, "w") as file:
+            with open(full_path, "w",  encoding="utf-8") as file:
                 file.write(fixed_code)
 
             return {
@@ -168,7 +168,7 @@ def register_debugger_actions(env):
                             "description": "Path of the solution file to run and debug (optional, defaults to 'solution.py')",
                         },
                     },
-                    "required": ["model_name"],
+                    "required": [],
                     "additionalProperties": False,
                 },
             },

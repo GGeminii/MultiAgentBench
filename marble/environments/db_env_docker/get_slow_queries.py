@@ -75,7 +75,7 @@ def obtain_slow_queries(diag_start_time, diag_end_time):
 
             for filename in files:
                 with sftp.open(
-                    f"{SERVER_CONFIG['remote_directory']}/{filename}", "r"
+                    f"{SERVER_CONFIG['remote_directory']}/{filename}", "r",  encoding="utf-8"
                 ) as remote_file:
                     for line in remote_file:
                         try:

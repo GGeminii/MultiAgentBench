@@ -32,12 +32,6 @@ def create_solution_handler(
         model_name = CONFIG["llm"]
         file_path = "solution.py"
         full_path = os.path.join(env.workspace_dir, file_path)
-
-        if os.path.exists(full_path):
-            return {
-                "success": False,
-                "info-msg": f"Solution file already exists at {full_path}. Operation aborted.",
-            }
         full_task_description = CONFIG["task"]["content"]
 
         requirements_start = "1. Implementation requirements:\n"
@@ -80,7 +74,7 @@ def create_solution_handler(
         else:
             code_content = code_content.strip()
 
-        with open(full_path, "w") as file:
+        with open(full_path, "w", encoding="utf-8") as file:
             file.write(code_content)
 
         return {
@@ -213,7 +207,7 @@ def register_coder_actions(env):
                             "description": "Description of the task (will be read from config file)",
                         },
                     },
-                    "required": ["task_description", "model_name"],
+                    "required": ["task_description"],
                     "additionalProperties": False,
                 },
             },
@@ -241,7 +235,7 @@ def register_coder_actions(env):
     #                         "description": "Path of the solution file to revise (optional, defaults to 'solution.py')"
     #                     }
     #                 },
-    #                 "required": ["task_description", "model_name"],
+    #                 "required": ["task_description"],
     #                 "additionalProperties": False
     #             }
     #         }

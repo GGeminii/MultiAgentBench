@@ -74,7 +74,7 @@ def building_material_load(path, bot, dig_needed=False):
     # 返回需要挖掘的方块数量
     import json
 
-    with open(path, "r") as f:
+    with open(path, "r",  encoding="utf-8") as f:
         map = json.load(f)
     material_pair = {}
     material_pair["dirt"] = 128
@@ -163,7 +163,7 @@ def material_factory_load(
 ):
     import json
 
-    with open(path, "r") as f:
+    with open(path, "r",  encoding="utf-8") as f:
         map = json.load(f)
 
     material_pairs = []

@@ -727,7 +727,7 @@ def load_agent_status():
             num += 1
     agent_status = {}
     for i in range(num):
-        with open(f"./agent_card/{i}.json", "r") as f:
+        with open(f"./agent_card/{i}.json", "r",  encoding="utf-8") as f:
             agent_card = json.load(f)
             agent_status[agent_card["name"]] = agent_card
     return agent_status

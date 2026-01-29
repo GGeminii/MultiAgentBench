@@ -50,6 +50,6 @@ class Config:
             FileNotFoundError: If the configuration file is not found.
             yaml.YAMLError: If there is an error parsing the YAML file.
         """
-        with open(file_path, "r") as file:
+        with open(file_path, "r",  encoding="utf-8") as file:
             data = yaml.safe_load(file)
         return Config(data)

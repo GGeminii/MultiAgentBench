@@ -607,7 +607,7 @@ class BaseAgent:
     def plan_task(self) -> Optional[str]:
         """
         Plan the next task based on the original tasks input, the agent's memory, task history, and its profile/persona.
-
+        TODO 惩奖信息处理
         Returns:
             str: The next task description.
         """

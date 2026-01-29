@@ -1174,5 +1174,5 @@ if __name__ == '__main__':
     TIMELOG.close()
 
 )\n\n\n\n"""
-    with open("m_i_code.txt", "a") as file:
+    with open("m_i_code.txt", "a",  encoding="utf-8") as file:
         file.write(code)

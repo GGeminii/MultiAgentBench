@@ -41,7 +41,7 @@ for line in lines:
         colsize = int(colsize_match.group(1)) if colsize_match else None
         nrow = int(nrow_match.group(1)) if nrow_match else None
         # 打开输出文件以写入内容
-        with open(output_file_name, "a") as output_file:
+        with open(output_file_name, "a",  encoding="utf-8") as output_file:
             script = f"python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA   --threads {threads} --ncolumn {ncolumn} --colsize {colsize} --nrow {nrow} {timestamp1}{timestamp2}\n"
             output_file.write(script)
     if anomaly == "wait":
@@ -57,7 +57,7 @@ for line in lines:
         colsize = int(colsize_match.group(1)) if colsize_match else None
         nrow = int(nrow_match.group(1)) if nrow_match else None
         # 打开输出文件以写入内容
-        with open(output_file_name, "a") as output_file:
+        with open(output_file_name, "a",  encoding="utf-8") as output_file:
             script = f"python anomaly_trigger/main.py --anomaly LOCK_CONTENTION   --threads {threads} --ncolumn {ncolumn} --colsize {colsize} --nrow {nrow} {timestamp1}{timestamp2}\n"
             output_file.write(script)
     if anomaly == "vacuum":
@@ -73,7 +73,7 @@ for line in lines:
         colsize = int(colsize_match.group(1)) if colsize_match else None
         nrow = int(nrow_match.group(1)) if nrow_match else None
         # 打开输出文件以写入内容
-        with open(output_file_name, "a") as output_file:
+        with open(output_file_name, "a",  encoding="utf-8") as output_file:
             script = f"python anomaly_trigger/main.py --anomaly VACUUM   --threads {threads} --ncolumn {ncolumn} --colsize {colsize} --nrow {nrow} {timestamp1}{timestamp2}\n"
             output_file.write(script)
 
@@ -90,7 +90,7 @@ for line in lines:
         colsize = int(colsize_match.group(1)) if colsize_match else None
         nrow = int(nrow_match.group(1)) if nrow_match else None
         # 打开输出文件以写入内容
-        with open(output_file_name, "a") as output_file:
+        with open(output_file_name, "a",  encoding="utf-8") as output_file:
             script = f"python anomaly_trigger/main.py --anomaly MISSING_INDEXES    --threads {threads} --ncolumn {ncolumn} --colsize {colsize} --nrow {nrow} {timestamp1}{timestamp2}\n"
             output_file.write(script)
     if bash == "too_many_indexes.sh":
@@ -99,21 +99,21 @@ for line in lines:
         colsize = random.randint(50, 100)
         nrow = random.randint(400000, 1000000)
         # 打开输出文件以写入内容
-        with open(output_file_name, "a") as output_file:
+        with open(output_file_name, "a",  encoding="utf-8") as output_file:
             script = f"python anomaly_trigger/main.py --anomaly REDUNDANT_INDEX   --threads {threads} --ncolumn {ncolumn} --colsize {colsize} --nrow {nrow} {timestamp1}{timestamp2}\n"
             output_file.write(script)
     if bash == "run_benchmark_job.sh":
         # 打开输出文件以写入内容
-        with open(output_file_name, "a") as output_file:
+        with open(output_file_name, "a",  encoding="utf-8") as output_file:
             script = f"python anomaly_trigger/main.py --anomaly POOR_JOIN_PERFORMANCE,CPU_CONTENTION {timestamp1}{timestamp2}\n"
             output_file.write(script)
     if bash == "run_benchmark_tpch.sh":
         # 打开输出文件以写入内容
-        with open(output_file_name, "a") as output_file:
+        with open(output_file_name, "a",  encoding="utf-8") as output_file:
             script = f"python anomaly_trigger/main.py --anomaly FETCH_LARGE_DATA,CORRELATED_SUBQUERY {timestamp1}{timestamp2}\n"
             output_file.write(script)
     if bash == "run_benchmark_tpcc.sh":
         # 打开输出文件以写入内容
-        with open(output_file_name, "a") as output_file:
+        with open(output_file_name, "a",  encoding="utf-8") as output_file:
             script = f"python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA,IO_CONTENTION {timestamp1}{timestamp2}\n"
             output_file.write(script)

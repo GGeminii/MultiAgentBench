@@ -227,7 +227,7 @@ def fetch_prometheus_metrics(args):
         os.makedirs(path)
 
     filename = str(int(time.time())) + ".json"
-    with open(os.path.join(path, filename), "w") as f:
+    with open(os.path.join(path, filename), "w",  encoding="utf-8") as f:
         json.dump(args, f)
 
 

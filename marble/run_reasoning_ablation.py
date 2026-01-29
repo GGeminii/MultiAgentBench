@@ -21,7 +21,7 @@ def create_config_with_strategy(
         strategy (str): Reasoning strategy to use
         output_path (str): Path to save the new config file
     """
-    with open(base_config_path, "r") as f:
+    with open(base_config_path, "r",  encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
     # Update strategy for all agents
@@ -31,7 +31,7 @@ def create_config_with_strategy(
     # Update output path to include strategy
     config["output"]["file_path"] = f"result/discussion_output_{strategy}.jsonl"
 
-    with open(output_path, "w") as f:
+    with open(output_path, "w",  encoding="utf-8") as f:
         yaml.dump(config, f)
 
 

@@ -1,14 +1,14 @@
-WORKSPACE_DIR="marble/workspace"
+WORKSPACE_DIR="workspace"
 UPDATE_SCRIPT="scripts/coding/utils/update_coding_config.py"
 RUN_DEMO_SCRIPT="marble/run_coding.sh"
 
-model_name="qwen3-30b"
+model_name="deepseek-v3.2"
 safe_model_name=$(echo ${model_name} | tr '/' '_')
-LOG_DIR="marble/logs/${safe_model_name}"
+LOG_DIR="logs/coding_solution/${safe_model_name}"
 
 mkdir -p ${LOG_DIR}
 
-for id in {1..1}; do
+for id in {2..2}; do
     echo "Processing task with ID=$id..."
     rm -rf ${WORKSPACE_DIR}/*
     python ${UPDATE_SCRIPT} --benchmark_id ${id}

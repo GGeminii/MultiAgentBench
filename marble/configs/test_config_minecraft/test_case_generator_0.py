@@ -3,12 +3,12 @@ import json
 import yaml
 from tqdm import tqdm
 
-# with open("marble/configs/test_config_minecraft/depricated/test_config_llama-31-8b_4.yaml", "r") as f:
+# with open("marble/configs/test_config_minecraft/depricated/test_config_llama-31-8b_4.yaml", "r",  encoding="utf-8") as f:
 #     data = yaml.safe_load(f)
 
 # print(json.dumps(data, indent=4))
 
-with open("data/blueprint_description_all.json", "r") as f:
+with open("data/blueprint_description_all.json", "r",  encoding="utf-8") as f:
     source_data = json.load(f)
 
 models = [
@@ -120,5 +120,6 @@ for model in tqdm(models):
         with open(
             f"marble/configs/test_config_minecraft/iteration_ablation/test_config_{short_model_name}_{task_id}.yaml",
             "w",
+            encoding="utf-8"
         ) as f:
             yaml.safe_dump(task_config, f)

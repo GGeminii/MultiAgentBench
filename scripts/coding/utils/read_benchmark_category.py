@@ -9,7 +9,7 @@ def read_categories(
     topic_categories = set()
     coordination_categories = set()
 
-    with open(benchmark_path, "r") as file:
+    with open(benchmark_path, "r",  encoding="utf-8") as file:
         for line in file:
             try:
                 data = json.loads(line)

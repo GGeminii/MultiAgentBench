@@ -28,18 +28,18 @@ def model_prompting(
     # litellm.set_verbose=True
     if "together_ai/TA" in llm_model:
         base_url = "https://api.ohmygpt.com/v1"
-    # elif "deepseek" in llm_model:
-    #     base_url = "https://api.deepseek.com/v1"
+    elif "deepseek" in llm_model:
+        base_url = "https://api.deepseek.com/v1"
     else:
         base_url = None
     try:
-        MAX_LENGTH = 350000
-        max_token_num = 114096
+        max_length = 350000
+        max_token_num = 8192
         # logger.info(f"大模型输入: {messages}")
         for msg in messages:
-            if len(msg["content"]) > MAX_LENGTH:
+            if len(msg["content"]) > max_length:
                 logger.info(f"大模型输入过大，正在压缩: {msg['content']}")
-                msg["content"] = msg["content"][:MAX_LENGTH] + '...'
+                msg["content"] = msg["content"][:max_length] + '...'
         completion = litellm.completion(
             model=llm_model,
             messages=messages,

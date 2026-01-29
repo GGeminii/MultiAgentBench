@@ -1,7 +1,7 @@
 import yaml
 
 with open(
-    "marble/configs/test_config_minecraft/test_config_gpt-4o-mini_0.yaml", "r"
+    "marble/configs/test_config_minecraft/test_config_gpt-4o-mini_0.yaml", "r",  encoding="utf-8"
 ) as f:
     data = yaml.safe_load(f)
 

@@ -219,7 +219,7 @@ import"""
             anomaly_jsons.append(content)
 
             # record the content in well-formatted json into a file
-            with open("anomaly_jsons.txt", "a") as f2:
+            with open("anomaly_jsons.txt", "a",  encoding="utf-8") as f2:
                 f2.write(json.dumps(content, indent=4) + "\n")
 
     print("alert_cnt:", alert_cnt)

@@ -94,7 +94,7 @@ def render_structure():
     id = data.get("id")
     center_pos = data.get("center_pos")
     try:
-        with open("../minecraft/building_blue_print.json", "r") as f:
+        with open("../minecraft/building_blue_print.json", "r",  encoding="utf-8") as f:
             structure_list = json.load(f)
         structure = structure_list[id]
         for b in structure["blocks"]:
@@ -370,7 +370,7 @@ def find():
             msg += f"the sign nearby said: {hint}"
 
         if os.path.exists(".cache/env.cache"):
-            with open(".cache/env.cache", "r") as f:
+            with open(".cache/env.cache", "r",  encoding="utf-8") as f:
                 cache = json.load(f)
             # 找到距离小于5的cache
             for c in cache:

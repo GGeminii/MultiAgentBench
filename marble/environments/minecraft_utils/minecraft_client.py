@@ -25,7 +25,7 @@ class MinecraftClient:
     @staticmethod
     def get_url_prefix() -> dict:
         if os.path.exists("../data/url_prefix.json"):
-            with open("../data/url_prefix.json", "r") as f:
+            with open("../data/url_prefix.json", "r",  encoding="utf-8") as f:
                 url_prefix = json.load(f)
         else:
             url_prefix = {}
@@ -109,7 +109,7 @@ class MinecraftClient:
             return
         url_prefix = MinecraftClient.get_url_prefix()
         url_prefix[name] = f"http://localhost:{local_port}"
-        with open("../data/url_prefix.json", "w") as f:
+        with open("../data/url_prefix.json", "w",  encoding="utf-8") as f:
             json.dump(url_prefix, f)
 
         MinecraftClient.name2port[name] = local_port

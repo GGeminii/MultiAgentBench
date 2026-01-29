@@ -17,7 +17,7 @@ def generate_task_milestones(task_description, client):
 
     # Load the prompt data from YAML file
     try:
-        with open("marble/utils/milestone_prompt.yaml", "r") as file:
+        with open("marble/utils/milestone_prompt.yaml", "r",  encoding="utf-8") as file:
             prompt_data = yaml.safe_load(file)
     except FileNotFoundError:
         print("Error: milestone_prompt.yaml file not found.")
