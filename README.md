@@ -79,18 +79,36 @@ To run examples provided in the `examples`:
 
 ```bash
 poetry install
-cd scripts
-cd werewolf
-bash run_simulation.sh
 ```
 ```bash
 # for research
 pip install lxml
 pip install ruamel.yaml
+# add new model type in multiagentbench/research/runjsonl2yaml_{model_name}.sh if you want to
+# copy multiagentbench/research/runjsonl2yaml_{model_name}.sh to multiagentbench/runjsonl2yaml.sh
+# get the dataset
+run multiagentbench/runjsonl2yaml.sh
+# update the model name in log path and config path
+# run the simulation
+bash run_research_{model_name}.sh
 ```
 ```bash
 # for coding
 pip install fire
+# update the llm\evaluator llm\result_output_path in marble/configs/coding_config/coding_config.yaml
+# run the simulation
+bash run_research_{model_name}.sh
+```
+```bash
+# for bargaining(world simulation)
+# update the seller_llm and buyer_llm in multiagentbench/bargaining/bargaining_main.jsonl by run multiagentbench/bargaining/handle_jsonl.py if you want to
+# add new model type and new bargaining_{model_name}.jsonl path in multiagentbench/bargaining/runjsonl2yaml_{model_name}.sh if you want to
+# copy multiagentbench/bargaining/runjsonl2yaml_{model_name}.sh to multiagentbench/runjsonl2yaml.sh
+# get the dataset
+run multiagentbench/runjsonl2yaml.sh
+# update the model name in log path and config path
+# run the simulation
+bash run_research_{model_name}.sh
 ```
 
 #### New branch for each feature
