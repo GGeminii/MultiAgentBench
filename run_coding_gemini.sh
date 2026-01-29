@@ -37,7 +37,7 @@ for id in {4..10}; do
     echo "======================================"
 
     # 执行仿真引擎
-    python marble/main.py --config "$CONFIG_FILE" > >(tee "$LOG_FILE") 2>&1
+    python marble/main.py --config "$CONFIG_FILE" --feedback_mode > >(tee "$LOG_FILE") 2>&1
 
     echo "Saving solution file..."
     cp ${WORKSPACE_DIR}/solution.py ${SOLUTION_LOG_DIR}/solution_${id}.py

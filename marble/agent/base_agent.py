@@ -13,6 +13,7 @@ from marble.environments import BaseEnvironment, CodingEnvironment, WebEnvironme
 from marble.llms.model_prompting import model_prompting
 from marble.memory import BaseMemory, SharedMemory
 from marble.utils.logger import get_logger
+from marble.feedback.feedback_support import generate_agent_task_planning_prompt, generate_agent_task_execution_prompt
 
 EnvType = Union[BaseEnvironment, WebEnvironment, CodingEnvironment]
 AgentType = TypeVar("AgentType", bound="BaseAgent")
@@ -38,6 +39,7 @@ class BaseAgent:
         env: EnvType,
         shared_memory: Union[SharedMemory, None] = None,
         model: str = "gpt-3.5-turbo",
+        is_feedback: bool = True,
     ):
         """
         Initialize the agent.
@@ -47,6 +49,7 @@ class BaseAgent:
             env (EnvType): Environment for the agent.
             shared_memory (BaseMemory, optional): Shared memory instance.
         """
+        self.is_feedback = is_feedback
         agent_id = config.get("agent_id")
         if isinstance(model, dict):
             self.llm = model.get("model", "gpt-3.5-turbo")
@@ -125,11 +128,12 @@ class BaseAgent:
         """
         return state.get("task_description", "")
 
-    def act(self, task: str) -> Any:
+    def act(self, task: str, feedback_package: Dict[str, Any]=None) -> Any:
         """
         Agent decides on an action to take.
 
         Args:
+            feedback_package: feedback
             task (str): The task to perform.
 
         Returns:
@@ -197,17 +201,20 @@ class BaseAgent:
         self.logger.info(
             f"Agent {self.agent_id} using {self.strategy} strategy with prompt:\n{reasoning_prompt}"
         )
-
-        act_task = (
-            f"You are {self.agent_id}: {self.profile}\n"
-            f"{reasoning_prompt}\n"  # 使用已经获取的 reasoning_prompt
-            f"This is your task: {task}\n"
-            f"These are the ids and profiles of other agents you can interact with:\n"
-            f"{agent_descriptions}"
-            f"But you do not have to communcate with other agents.\n"
-            f"You can also solve the task by calling other functions to solve it by yourself.\n"
-            f"These are your memory: {self.memory.get_memory_str()}\n"
-        )
+        if self.is_feedback:
+            act_task = generate_agent_task_execution_prompt(self.agent_id, self.profile, self.memory, reasoning_prompt, task, agent_descriptions, feedback_package)
+            self.logger.info(f"Agent {self.agent_id} act task with feedback: {act_task}")
+        else:
+            act_task = (
+                f"You are {self.agent_id}: {self.profile}\n"
+                f"{reasoning_prompt}\n"  # 使用已经获取的 reasoning_prompt
+                f"This is your task: {task}\n"
+                f"These are the ids and profiles of other agents you can interact with:\n"
+                f"{agent_descriptions}"
+                f"But you do not have to communcate with other agents.\n"
+                f"You can also solve the task by calling other functions to solve it by yourself.\n"
+                f"These are your memory: {self.memory.get_memory_str()}\n"
+            )
         self.logger.info(f"Complete prompt for agent {self.agent_id}:\n{act_task}")
 
         if len(tools) == 0:
@@ -604,10 +611,10 @@ class BaseAgent:
             self.session_id = old_session_id
             return {"success": False, "error": f"Error sending message: {str(e)}"}
 
-    def plan_task(self) -> Optional[str]:
+    def plan_task(self, feedback_package: dict[str, Any] = None) -> Optional[str]:
         """
         Plan the next task based on the original tasks input, the agent's memory, task history, and its profile/persona.
-        TODO 惩奖信息处理
+
         Returns:
             str: The next task description.
         """
@@ -621,12 +628,17 @@ class BaseAgent:
         persona = self.get_profile()
 
         # Use memory entries, persona, and task history to determine the next task
+        if self.is_feedback:
+            prompt = generate_agent_task_planning_prompt(self.agent_id, persona, task_history_str, memory_str, feedback_package)
+            self.logger.info(f"Agent '{self.agent_id}' is planning the next task with feedback: {prompt}")
+        else:
+            prompt =  f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?"
         next_task = model_prompting(
             llm_model=self.llm,
             messages=[
                 {
                     "role": "user",
-                    "content": f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?",
+                    "content": prompt
                 }
             ],
             return_num=1,
@@ -638,7 +650,7 @@ class BaseAgent:
         messages = [
             {
                 "role": "user",
-                "content": f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?",
+                "content": prompt
             },
             {"role": "system", "content": next_task},
         ]

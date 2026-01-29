@@ -20,6 +20,7 @@ from marble.environments import (
     WorldSimulationEnvironment,
 )
 from marble.evaluator.evaluator import Evaluator
+from marble.feedback.feedback_provider import FeedbackProvider
 from marble.graph.agent_graph import AgentGraph
 from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
@@ -59,7 +60,7 @@ class Engine:
             self.logger.error(f"Failed to read code from {file_path}: {e}")
             return ""
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, is_feedback: bool = True):
         """
         Initialize the Engine with the given configuration.
 
@@ -72,7 +73,7 @@ class Engine:
         # Initialize Environment
         self.environment = self._initialize_environment(config.environment)
         # Initialize Agents
-        self.agents = self._initialize_agents(config.agents)
+        self.agents = self._initialize_agents(config.agents, is_feedback)
         # Initialize AgentGraph
         self.graph = AgentGraph(self.agents, config)
         for agent in self.agents:
@@ -94,6 +95,13 @@ class Engine:
             config=config.engine_planner,
             task=self.task,
             model=config.llm,
+        )
+        # Initialize FeedbackProvider
+        self.feedback_provider = FeedbackProvider(
+            task=self.task,
+            agent_profiles={agent.agent_id: agent.profile for agent in self.agents},
+            evaluator=self.evaluator,
+            is_feedback=is_feedback
         )
         self.max_iterations = config.environment.get("max_iterations", 10)
         self.current_iteration = 0
@@ -142,7 +150,7 @@ class Engine:
             raise ValueError(f"Unsupported environment type: {env_type}")
 
     def _initialize_agents(
-        self, agent_configs: List[Dict[str, Any]]
+        self, agent_configs: List[Dict[str, Any]], is_feedback: bool = True
     ) -> List[BaseAgent]:
         """
         Initialize agents based on configurations.
@@ -161,7 +169,7 @@ class Engine:
             )  # use agent-specific LLM if provided
             agent_type = agent_config.get("type")
             agent = BaseAgent(
-                config=agent_config, env=self.environment, model=agent_llm
+                config=agent_config, env=self.environment, model=agent_llm, is_feedback=is_feedback
             )
             agents.append(agent)
             self.logger.debug(
@@ -325,7 +333,9 @@ class Engine:
                 )
             else:
                 self.current_iteration += 1
-            # Iterate start
+                feedback_package: Dict[str, Any] = self.feedback_provider.get_full_feedback_package(iteration_data)
+
+            # !!! Iterate start !!!
             while self.current_iteration < self.max_iterations and continue_simulation:
                 iteration_data = {
                     "iteration": self.current_iteration + 1,
@@ -347,7 +357,7 @@ class Engine:
                 for agent in current_agents:
                     try:
                         # !!! Each agent plans its own task !!!
-                        task = agent.plan_task()
+                        task = agent.plan_task(feedback_package)
                         current_tasks[agent.agent_id] = task
                         iteration_data_task_assignments = iteration_data.get(
                             "task_assignments"
@@ -359,7 +369,7 @@ class Engine:
                         )
 
                         # !!! Agent acts on the planned task !!!
-                        result, communication = agent.act(task)
+                        result, communication = agent.act(task, feedback_package)
                         self.logger.info(
                             f"Processing result for agent '{agent.agent_id}'"
                         )
@@ -445,7 +455,8 @@ class Engine:
                     break
                 else:
                     self.current_iteration += 1
-                    # TODO 根据评估结果进行反馈
+                    # 根据评估结果进行反馈
+                    feedback_package: Dict[str, Any] = self.feedback_provider.get_full_feedback_package(iteration_data)
                     # # Check if task is completed within the environment
                     # if self.environment.is_task_completed():
                     #     self.logger.info("Task has been completed successfully.")

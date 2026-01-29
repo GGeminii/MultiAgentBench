@@ -25,6 +25,12 @@ def parse_args() -> argparse.Namespace:
         required=True,
         help="Path to the configuration YAML file.",
     )
+    parser.add_argument(
+        "--feedback_mode",
+        action='store_true',
+        help="whether to open the feedback_mode",
+        default=False,
+    )
     return parser.parse_args()
 
 
@@ -49,7 +55,8 @@ def main() -> None:
     # Initialize and start the engine
     try:
         logging.info(f"Starting engine with configuration: {args.config_path}")
-        engine = Engine(config)
+        logging.info(f"feedback_mode started: {args.feedback_mode}")
+        engine = Engine(config, args.feedback_mode)
         engine.start()
     except Exception:
         logging.exception(

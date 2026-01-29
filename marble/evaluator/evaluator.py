@@ -295,7 +295,7 @@ class Evaluator:
             return parsed_ratings
 
         except (json.JSONDecodeError, KeyError, ValueError):
-            self.logger.error("Failed to parse task world ratings.")
+            self.logger.error(f"Failed to parse task world ratings: {llm_response}")
             return default_ratings  # 解析失败则返回默认评分
 
     def evaluate_task_db(self, task: str, result: str, labels: List[str], pred_num: int, root_causes: List[str]) -> None:

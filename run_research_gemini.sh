@@ -28,7 +28,7 @@ do
     echo "======================================"
 
     # 执行仿真引擎
-    python marble/main.py --config "$CONFIG_FILE" > >(tee "$LOG_FILE") 2>&1
+    python marble/main.py --config "$CONFIG_FILE" --feedback_mode > >(tee "$LOG_FILE") 2>&1
 
     # 打印本次执行完成信息
     echo "第 $i 次运行执行完成"

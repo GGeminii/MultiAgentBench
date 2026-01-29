@@ -27,33 +27,34 @@ environment:
   workspace_dir: workspace
   max_iterations: 5
 task:
-  content: "Software Development Task:\n\nPlease write a game called 'Team_Tactics'
-    that is a multiplayer action game designed to test the collaborative capabilities
-    of multiple AI agents. Team_Tactics is a game where AI agents work together to
-    complete objectives, such as capturing flags, defending bases, and eliminating
-    enemy agents. The game is set in various dynamic environments, and agents must
-    communicate and coordinate their actions to succeed.\n1. Implementation requirements:\n\
-    \   - Implement a game environment with multiple levels, each featuring different
-    objectives (e.g., capture the flag, defend the base, eliminate enemies).\n   -
-    Design AI agents with different roles (e.g., attacker, defender, scout) and abilities
-    (e.g., increased speed, healing, shielding).\n   - Develop a communication system
-    that allows AI agents to share information, such as enemy locations, objective
-    status, and strategic plans.\n   - Create a scoring system that rewards successful
-    completion of objectives and penalizes failures or inefficient play.\n   - Provide
-    comprehensive test cases to validate the functionality of the game and the collaborative
-    capabilities of the AI agents, including input scenarios, expected outputs, and
-    edge cases.\n   - Test scenarios should include: agents successfully capturing
-    the flag, defending the base from multiple attackers, and coordinating to eliminate
-    all enemies in a level.\n   - Edge cases should cover: agents failing to communicate
-    effectively, agents getting stuck or unable to navigate the environment, and unexpected
-    interactions between different agent abilities.\n\n\n2. Project structure:\n \
-    \  - solution.py (main implementation)\n\n3. Development process:\n   - Developer:
-    Create the code.\n   - Developer: Revise the code.\n   - Developer: Optimize the
-    code.\n\nIf there are multiple files, please put them all in solution.py, but
-    remember to add the file name in the following format:\n```python\n# file_name_1.py\n\
-    # your code here\n\n# file_name_2.py\n# your code here\n\n# file_name_3.py\n#
-    your code here\n```\n\nPlease work together to complete this task following software
-    engineering best practices."
+  content: "Software Development Task:\n\nPlease write a multi-agent system called
+    'CyberArena' that simulates a futuristic battle arena where multiple AI-controlled
+    robots compete in team-based challenges. CyberArena is a dynamic action game that
+    allows robots to collaborate, adapt to changing environments, and use a variety
+    of weapons and abilities to outsmart and outmaneuver their opponents.\n1. Implementation
+    requirements:\n   - Implement a real-time combat system where robots can engage
+    in battles using a variety of weapons, including ranged and melee attacks.\n \
+    \  - Design a team-based objective system where robots must work together to complete
+    tasks, such as capturing flags, defending bases, or escorting payloads, with dynamic
+    roles and responsibilities.\n   - Incorporate an adaptive difficulty system that
+    adjusts the AI behavior and challenge level based on the performance of the robots,
+    ensuring a balanced and engaging experience.\n   - Create a feedback loop where
+    robots can learn from previous battles, adapt their strategies, and improve their
+    teamwork over time.\n   - Develop a visual and audio environment that enhances
+    the immersive experience, including dynamic lighting, particle effects, and realistic
+    sound effects.\n   - Ensure smooth and responsive controls for the robots, allowing
+    for fluid movement and precise actions, and provide options for customizing control
+    schemes.\n   - Include a variety of power-ups and environmental hazards that can
+    be strategically used to gain advantages or create obstacles for opponents.\n\
+    \   - Implement a scoring system that rewards effective teamwork, strategic play,
+    and successful completion of objectives, with clear visual and audio feedback
+    to players.\n\n\n2. Project structure:\n   - solution.py (main implementation)\n\
+    \n3. Development process:\n   - Developer: Create the code.\n   - Developer: Revise
+    the code.\n   - Developer: Optimize the code.\n\nIf there are multiple files,
+    please put them all in solution.py, but remember to add the file name in the following
+    format:\n```python\n# file_name_1.py\n# your code here\n\n# file_name_2.py\n#
+    your code here\n\n# file_name_3.py\n# your code here\n```\n\nPlease work together
+    to complete this task following software engineering best practices."
   output_format: 'The final deliverable should include:
 
     solution.py

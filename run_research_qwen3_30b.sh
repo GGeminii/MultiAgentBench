@@ -6,7 +6,7 @@ CONFIG_BASE_PATH="multiagentbench/research/dataset/research-qwen3-30b/task_"
 LOG_BASE_PATH="logs/research/qwen3-30b/log_research_"
 
 # 循环100次（从1到100）
-for ((i=4; i<=10; i++))
+for ((i=1; i<=3; i++))
 do
     # 拼接当前次数对应的配置文件完整路径
     CONFIG_FILE="${CONFIG_BASE_PATH}${i}.yaml"
@@ -28,7 +28,7 @@ do
     echo "======================================"
 
     # 执行仿真引擎
-    python marble/main.py --config "$CONFIG_FILE" > >(tee "$LOG_FILE") 2>&1
+    python marble/main.py --config "$CONFIG_FILE" --feedback_mode > >(tee "$LOG_FILE") 2>&1
 
     # 打印本次执行完成信息
     echo "第 $i 次运行执行完成"
