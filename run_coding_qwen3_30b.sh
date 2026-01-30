@@ -11,7 +11,7 @@ SOLUTION_LOG_DIR="logs/coding_solution/${safe_model_name}"
 
 mkdir -p ${SOLUTION_LOG_DIR}
 
-for id in {1..3}; do
+for id in {4..5}; do
     echo "Processing task with ID=$id..."
     rm -rf ${WORKSPACE_DIR}/*
     python ${UPDATE_SCRIPT} --benchmark_id ${id}
@@ -37,7 +37,7 @@ for id in {1..3}; do
     echo "======================================"
 
     # 执行仿真引擎
-    python marble/main.py --config "$CONFIG_FILE" --feedback_mode > >(tee "$LOG_FILE") 2>&1
+    python marble/main.py --config "$CONFIG_FILE" > >(tee "$LOG_FILE") 2>&1
 
     echo "Saving solution file..."
     cp ${WORKSPACE_DIR}/solution.py ${SOLUTION_LOG_DIR}/solution_${id}.py
