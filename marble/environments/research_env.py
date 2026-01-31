@@ -74,6 +74,7 @@ class ResearchEnvironment(BaseEnvironment):
                         "type": "object",
                         "properties": {
                             "domain": {
+
                                 "type": "string",
                                 "description": "Domain to fetch recent papers from.",
                             },
