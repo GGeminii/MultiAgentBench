@@ -33,10 +33,6 @@ class FeedbackProvider:
         self.task = task
         self.agent_profiles = agent_profiles
         self.is_feedback = is_feedback
-        if is_feedback:
-            self.logger.debug("已启用强化学习反馈机制")
-        else:
-            self.logger.debug("已禁用强化学习反馈机制")
         self.evaluator = evaluator
         self.llm = self._init_llm()
 
@@ -45,10 +41,10 @@ class FeedbackProvider:
             with open('marble/feedback/feedback_prompts.json', 'r', encoding='utf-8') as f:
                 self.feedback_prompts = json.load(f)
         except FileNotFoundError:
-            self.logger.error("反馈提示词文件未找到：marble/feedback/feedback_prompts.json")
+            self.logger.error("The feedback prompt file is not found：marble/feedback/feedback_prompts.json")
             raise
         except json.JSONDecodeError as e:
-            self.logger.error(f"反馈提示词文件格式错误，无法解析JSON: {str(e)}")
+            self.logger.error(f"The file format of the feedback prompt is incorrect and the JSON cannot be parsed: {str(e)}")
             raise
 
         # 存储生成的反馈结果
@@ -110,7 +106,7 @@ class FeedbackProvider:
         """
         latest_planning, latest_communication = self._get_latest_scores()
         agent_kpis = self.evaluator.metrics.get("agent_kpis", {})
-        self.logger.debug(f"开始计算智能体奖励，规划得分：{latest_planning}，沟通得分：{latest_communication}")
+        self.logger.debug(f"Start calculating agent rewards and planning scores：{latest_planning}，Communication score：{latest_communication}")
 
         # 归一化系数（将1-5分映射到0-1）
         score_normalize_factor = 1.0 / 5.0
@@ -121,7 +117,7 @@ class FeedbackProvider:
                 contribution_ratio = self._calculate_agent_contribution_ratio(agent_id)
             else:
                 contribution_ratio = 0.0
-                self.logger.debug(f"智能体 {agent_id} 无有效KPI数据，贡献占比默认设为0.0")
+                self.logger.debug(f"Agent {agent_id} has no effective KPI data, and the contribution ratio is set to 0.0 by default")
 
             normalized_planning = latest_planning * score_normalize_factor
             normalized_communication = latest_communication * score_normalize_factor
@@ -136,7 +132,7 @@ class FeedbackProvider:
             # 3. 裁剪到 0-1 区间
             agent_reward = max(0.0, min(1.0, agent_reward))
             self.agent_rewards[agent_id] = agent_reward
-            self.logger.debug(f"智能体 {agent_id} 奖励计算完成：{agent_reward:.4f}（贡献占比：{contribution_ratio:.2%}）")
+            self.logger.debug(f"Agent {agent_id} reward calculation completed: {agent_reward:.4f} (Contribution ratio: {contribution_ratio:.2%})")
         return self.agent_rewards
 
     def sorted_agent_contribution(self):
@@ -157,7 +153,7 @@ class FeedbackProvider:
             Dict[str, str]: 智能体ID到个性化反馈的映射
         """
         if not self.agent_rewards:
-            self.logger.warning("未计算智能体奖励，先自动计算奖励值")
+            self.logger.warning("If the agent reward is not calculated, the reward value is automatically calculated first")
             self.calculate_agent_rewards()
 
         latest_planning, latest_communication = self._get_latest_scores()
@@ -199,11 +195,11 @@ class FeedbackProvider:
 
                 assert isinstance(result.content, str)
                 self.individual_feedbacks[agent_id] = result.content
-                self.logger.debug(f"智能体 {agent_id} 个性化反馈生成完成")
+                self.logger.debug(f"Agent {agent_id} personalized feedback generation completes")
 
             except Exception as e:
-                self.logger.error(f"生成智能体 {agent_id} 反馈失败：{e}")
-                self.individual_feedbacks[agent_id] = f"反馈生成失败：{str(e)}"
+                self.logger.error(f"generativeAgents: {agent_id} feedbackFailed:{e}")
+                self.individual_feedbacks[agent_id] = f"feedbackGenerationFailed:{str(e)}"
 
         return self.individual_feedbacks
 
@@ -253,11 +249,11 @@ class FeedbackProvider:
 
             assert isinstance(result.content, str)
             self.team_feedback = result.content
-            self.logger.debug("团队整体反馈与关系图优化建议生成完成")
+            self.logger.debug("The overall feedback of the team and the optimization suggestions of the relationship diagram are generated")
 
         except Exception as e:
-            self.logger.error(f"生成团队反馈失败：{e}")
-            self.team_feedback = f"团队反馈生成失败：{str(e)}"
+            self.logger.error(f"generateTeamFeedbackFailed：{e}")
+            self.team_feedback = f"teamFeedbackGenerationFailed：{str(e)}"
 
         return self.team_feedback
 
@@ -272,11 +268,11 @@ class FeedbackProvider:
             str: 奖励解释内容
         """
         if agent_id not in self.agent_rewards:
-            self.logger.warning(f"智能体 {agent_id} 无奖励数据，先自动计算奖励值")
+            self.logger.warning(f"Agent {agent_id} If there is no reward data, the reward value will be automatically calculated first")
             self.calculate_agent_rewards()
 
         if agent_id not in self.agent_rewards:
-            error_msg = f"智能体 {agent_id} 不存在或无有效数据"
+            error_msg = f"Agent {agent_id} No or valid data"
             self.logger.error(error_msg)
             return error_msg
 
@@ -307,12 +303,12 @@ class FeedbackProvider:
             )[0]
 
             assert isinstance(result.content, str)
-            self.logger.debug(f"智能体 {agent_id} 奖励解释生成完成")
+            self.logger.debug(f"agent {agent_id} The reward interpretation is generated")
             return result.content
 
         except Exception as e:
-            self.logger.error(f"生成智能体 {agent_id} 奖励解释失败：{e}")
-            return f"奖励解释生成失败：{str(e)}"
+            self.logger.error(f"Generative agents {agent_id} Reward explanation failed：{e}")
+            return f"Reward explanation generation failed：{str(e)}"
 
     def get_full_feedback_package(self, iteration_task_data: Dict[str, Any]) -> Dict[str, Any] | None:
         """
@@ -325,7 +321,7 @@ class FeedbackProvider:
             Dict[str, Any]: 完整反馈包
         """
         if not self.is_feedback:
-            self.logger.info("反馈功能未启用, 不生成反馈信息")
+            self.logger.info("The feedback function is not enabled and does not generate feedback information")
             return None
         # 1. 生成所有反馈内容
         self.generate_individual_feedback(iteration_task_data)
@@ -349,5 +345,5 @@ class FeedbackProvider:
             }
         }
 
-        self.logger.info(f"完整反馈包构建完成，可用于下一轮智能体策略优化: {full_feedback}")
+        self.logger.info(f"The full feedback package is built and can be used for the next round of agent policy optimization: {full_feedback}")
         return full_feedback

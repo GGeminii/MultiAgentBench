@@ -238,7 +238,7 @@ class Engine:
             for agent_id, task in initial_tasks.items():
                 try:
                     agent = self.graph.get_agent(agent_id)
-                    self.logger.info(f"Assigning initial task to {agent_id}: {task}")
+                    self.logger.info(f"Assigning initial task to {agent_id}")
                     # Assign the task to the agent
                     iteration_data_task_assignments = iteration_data.get(
                         "task_assignments"
@@ -246,6 +246,7 @@ class Engine:
                     assert isinstance(iteration_data_task_assignments, dict)
                     iteration_data_task_assignments[agent_id] = task
                     # !!! Agent start to do task !!!
+                    self.logger.info(f"agent {agent_id} start act task")
                     result, communication = agent.act(task)
                     self.logger.info(f"Processing result for agent '{agent.agent_id}'")
                     self.logger.info(f"Communication received: {communication}")
@@ -356,7 +357,9 @@ class Engine:
 
                 for agent in current_agents:
                     try:
+                        self.logger.info(f"Assigning initial task to {agent.agent_id}")
                         # !!! Each agent plans its own task !!!
+                        self.logger.info(f"agent { agent.agent_id} start plan task")
                         task = agent.plan_task(feedback_package)
                         current_tasks[agent.agent_id] = task
                         iteration_data_task_assignments = iteration_data.get(
@@ -364,11 +367,8 @@ class Engine:
                         )
                         assert isinstance(iteration_data_task_assignments, dict)
                         iteration_data_task_assignments[agent.agent_id] = task
-                        self.logger.info(
-                            f"Agent '{agent.agent_id}' planned task: {task}"
-                        )
-
                         # !!! Agent acts on the planned task !!!
+                        self.logger.info(f"agent {agent.agent_id} start act task")
                         result, communication = agent.act(task, feedback_package)
                         self.logger.info(
                             f"Processing result for agent '{agent.agent_id}'"

@@ -79,9 +79,9 @@ def handle_bargaining(
 if __name__ == "__main__":
     # 配置参数
     INPUT_FILE = "bargaining_main.jsonl"  # 输入文件路径
-    OUTPUT_FILE = "bargaining_deepseek.jsonl"  # 输出文件路径
-    SELLER_LLM = "deepseek/deepseek-chat"  # 卖方要替换的LLM名称
-    BUYER_LLM = "deepseek/deepseek-chat"  # 买方要替换的LLM名称
+    OUTPUT_FILE = "bargaining_gpt.jsonl"  # 输出文件路径
+    SELLER_LLM = "gpt-4o-mini"  # 卖方要替换的LLM名称
+    BUYER_LLM = "gpt-4o-mini"  # 买方要替换的LLM名称
 
     try:
         # 调用函数处理数据

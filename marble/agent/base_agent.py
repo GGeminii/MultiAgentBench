@@ -140,7 +140,6 @@ class BaseAgent:
             Any: The action decided by the agent.
         """
         self.task_history.append(task)
-        self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
         tools = [
             self.env.action_handler_descriptions[name]
             for name in self.env.action_handler_descriptions
@@ -203,7 +202,6 @@ class BaseAgent:
         )
         if self.is_feedback:
             act_task = generate_agent_task_execution_prompt(self.agent_id, self.profile, self.memory, reasoning_prompt, task, agent_descriptions, feedback_package)
-            self.logger.info(f"Agent {self.agent_id} act task with feedback: {act_task}")
         else:
             act_task = (
                 f"You are {self.agent_id}: {self.profile}\n"
@@ -215,7 +213,6 @@ class BaseAgent:
                 f"You can also solve the task by calling other functions to solve it by yourself.\n"
                 f"These are your memory: {self.memory.get_memory_str()}\n"
             )
-        self.logger.info(f"Complete prompt for agent {self.agent_id}:\n{act_task}")
 
         if len(tools) == 0:
             result = model_prompting(
@@ -281,12 +278,12 @@ class BaseAgent:
                 },
             )
 
-            self.logger.info(
-                f"Agent '{self.agent_id}' called '{function_name}' with args '{function_args}'."
-            )
-            self.logger.info(
-                f"Agent '{self.agent_id}' obtained result '{result_from_function}'."
-            )
+            # self.logger.info(
+            #     f"Agent '{self.agent_id}' called '{function_name}' with args '{function_args}'."
+            # )
+            # self.logger.info(
+            #     f"Agent '{self.agent_id}' obtained result '{result_from_function}'."
+            # )
 
         else:
             self.memory.update(

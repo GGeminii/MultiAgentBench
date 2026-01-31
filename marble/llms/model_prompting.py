@@ -26,19 +26,24 @@ def model_prompting(
     Select model via router in LiteLLM with support for function calling.
     """
     # litellm.set_verbose=True
+    api_key = None
     if "together_ai/TA" in llm_model:
         base_url = "https://api.ohmygpt.com/v1"
     elif "deepseek" in llm_model:
         base_url = "https://api.deepseek.com/v1"
+    elif "gpt" in llm_model:
+        base_url = "https://api.deerapi.com/v1"
+        # TODO 配置第三方APIKEY
+        api_key = ""
     else:
         base_url = None
     try:
         max_length = 350000
-        max_token_num = 8192
+        max_token_num = 4096
         # logger.info(f"大模型输入: {messages}")
         for msg in messages:
             if len(msg["content"]) > max_length:
-                logger.info(f"大模型输入过大，正在压缩: {msg['content']}")
+                logger.info(f"The input of the large model is too large and is being compressed: {msg['content']}")
                 msg["content"] = msg["content"][:max_length] + '...'
         completion = litellm.completion(
             model=llm_model,
@@ -51,6 +56,7 @@ def model_prompting(
             tools=tools,
             tool_choice=tool_choice,
             base_url=base_url,
+            api_key=api_key,
         )
         # logger.info(f"大模型输出: {completion}")
         message_0: Message = completion.choices[0].message
@@ -58,5 +64,5 @@ def model_prompting(
         assert isinstance(message_0, Message)
         return [message_0]
     except Exception as e:
-        logger.info(f"【错误】请求大模型 - {str(e)}")
+        logger.info(f"Error: Request a large model - {str(e)}")
         raise e

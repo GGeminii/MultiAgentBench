@@ -12,7 +12,9 @@ from pydantic import BaseModel, Field
 from PyPDF2 import PdfReader
 from tqdm import tqdm
 
+from marble.llms import model_prompting
 
+MODEL_NAME = 'deepseek/deepseek-chat'
 class Data(BaseModel):
     pk: str = Field(default_factory=lambda: str(uuid.uuid4()))
     project_name: Optional[str] = Field(default=None)
@@ -26,7 +28,7 @@ class Paper(Data):
     arxiv_id: Optional[str] = Field(default=None)
     url: Optional[str] = Field(default=None)
     timestamp: Optional[int] = Field(default=None)
-    sections: Optional[Dict[str, str]] = Field(default=None)
+    sections: Optional[Dict[str, str]] | str = Field(default=None)
     table_captions: Optional[Dict[str, str]] = Field(default=None)
     figure_captions: Optional[Dict[str, str]] = Field(default=None)
     bibliography: Optional[Dict[str, str]] = Field(default=None)
@@ -194,10 +196,10 @@ def fetch_html_content(url: str) -> Optional[BeautifulSoup]:
         html_url = url
 
     try:
-        print("正在获取html内容：", html_url)
+        print("get html content：", html_url)
         response = requests.get(html_url, timeout=10)
         if response.status_code == 200:
-            print("获取html内容成功")
+            print("get html content successfully")
             return BeautifulSoup(response.text, "lxml")
     except Exception:
         return None
@@ -303,7 +305,54 @@ def get_paper_content_from_html(url: str) -> Optional[Dict[str, str]]:
         return None
 
     section_contents = get_section_contents(soup)
-    return section_contents
+    response = model_prompting(
+        MODEL_NAME,
+        messages=[
+            {"role": "system", "content": """
+You are a professional academic refinement expert. Based on the full text or core content of the paper I provide, output a **one-glance comprehensive concise interpretation** that allows readers to grasp all key information of the paper at one read. Follow the strict structure and requirements below:
+
+### 1. One-Sentence Overview (≤100 words)
+Accurately summarize the paper’s **core research problem, innovative method/model/theory, key experimental results/validation data, and core research value** in a single sentence.
+
+### 2. Key Information Checklist
+List the core content in clear bullet points, including:
+- Research background & the core pain point to solve
+- Proposed core method/model/theory (core innovation)
+- Key experimental data, validation results & comparison with baselines
+- Final research conclusions & academic/industrial contributions of the study
+
+### 3. One-Sentence Value Refinement
+Highlight the **practical application value** of the research for the field or the **enlightenment for subsequent research** in a single concise sentence.
+
+### Requirements
+- Concise and precise expression, no redundant content
+- Professional academic terms, consistent with the paper’s research field
+- Logical clarity, cover all core information of the paper without omission
+
+---
+## Example Reference
+### One-Sentence Overview
+Aiming at the poor generalization of existing few-shot image classification algorithms in cross-domain scenarios, this paper proposes a meta-learning-based dynamic feature adaptation framework, which improves the average accuracy by 8.3% on 5 public datasets and provides a feasible solution for industrial quality inspection in few-shot scenarios.
+
+### Key Information Checklist
+- Background: Existing few-shot image classification algorithms have insufficient generalization ability in cross-domain application scenarios
+- Method: A dynamic feature adaptation framework based on meta-learning, which enables the model to quickly adapt to new category features
+- Results: On 5 datasets such as CIFAR-FS, the Top-1 accuracy is improved by 7.1%-9.5% compared with the baseline model
+- Contributions: First introduce dynamic feature adaptation into meta-learning few-shot classification, and provide a technical scheme for industrial defect detection and other practical scenarios
+
+### One-Sentence Value Refinement
+This research solves the cross-domain generalization problem of few-shot classification, which can be directly applied to practical scenarios such as industrial defect detection, and provides new ideas for the robustness optimization of subsequent few-shot algorithms.
+            """},
+            {"role": "user", "content": f"""
+The content of the paper is as follows: 
+{section_contents}
+            """},
+        ],
+        return_num=1,
+        max_token_num=4096,
+        temperature=0.7,
+    )[0]
+    return response.content
 
 
 def get_paper_figure_captions_from_html(url: str) -> Optional[Dict[str, str]]:
@@ -330,7 +379,8 @@ def get_paper_bibliography_from_html(url: str) -> Optional[Dict[str, str]]:
         return None
 
     bibliography = get_bibliography(soup)
-    return bibliography
+    # return bibliography
+    return None
 
 
 def get_paper_content_from_pdf(url: str) -> Optional[Dict[str, str]]:

@@ -20,38 +20,43 @@ relationships:
   -   - agent3
       - agent2
       - collaborates with
-llm: openrouter/qwen/qwen3-30b-a3b-instruct-2507
+llm: gpt-4o-mini
 environment:
   type: Coding
   name: Coding Competition Environment
   workspace_dir: workspace
   max_iterations: 5
 task:
-  content: "Software Development Task:\n\nPlease write a software application called
-    Board_Game_Team_Collaborator that facilitates team-based board game play by dynamically
-    managing team compositions, tracking team scores, and providing real-time feedback
-    and suggestions to improve team performance.\n1. Implementation requirements:\n\
-    \   - The application should allow users to create and manage teams, including
-    assigning players to specific teams and roles within the game.\n   - It should
-    provide a real-time leaderboard that updates as players input their scores, displaying
-    the current standings of each team.\n   - The application should include a machine
-    learning component that analyzes team performance and suggests strategies or adjustments
-    to improve team scores based on previous gameplay patterns and current performance.\n\
-    \   - The system should be adaptive, allowing for dynamic changes in team compositions
-    and roles based on user feedback or performance metrics.\n   - The application
-    should support multiple board games, with customizable settings for each game,
-    such as game type, number of players, and scoring rules.\n   - It should offer
-    a user-friendly interface with clear visualizations of team scores, performance
-    metrics, and suggestions for improvement.\n   - The application should provide
-    notifications and alerts to teams when it's their turn to play, and automatically
-    adjust the turn order based on the game rules and team performance.\n\n\n2. Project
-    structure:\n   - solution.py (main implementation)\n\n3. Development process:\n\
-    \   - Developer: Create the code.\n   - Developer: Revise the code.\n   - Developer:
-    Optimize the code.\n\nIf there are multiple files, please put them all in solution.py,
-    but remember to add the file name in the following format:\n```python\n# file_name_1.py\n\
-    # your code here\n\n# file_name_2.py\n# your code here\n\n# file_name_3.py\n#
-    your code here\n```\n\nPlease work together to complete this task following software
-    engineering best practices."
+  content: "Software Development Task:\n\nPlease write a program called Data_Analyst_Collaborator
+    that facilitates collaborative data analysis among multiple users or agents. Data_Analyst_Collaborator
+    is a software application designed to enable a team of users or AI agents to collectively
+    analyze and interpret complex datasets. It provides tools for data profiling,
+    merging, and correlation analysis, and supports real-time collaboration, allowing
+    team members to work together, share insights, and adapt their analysis based
+    on collective feedback.\n1. Implementation requirements:\n   - The program should
+    support the import of multiple datasets in various formats (CSV, Excel, JSON).\n\
+    \   - It should provide a user-friendly interface for data profiling, including
+    automatic detection of data types, identification of missing values, and generation
+    of summary statistics and visualizations.\n   - The program must enable users
+    or agents to merge datasets based on common fields, with options for horizontal
+    and vertical merging, and automatic handling of data type inconsistencies.\n \
+    \  - It should include a correlation analysis module that calculates and visualizes
+    correlation coefficients (Pearson, Spearman) between selected variables, and allows
+    users to explore relationships through interactive scatter plots and correlation
+    matrices.\n   - The application must support real-time collaboration, allowing
+    multiple users or agents to work on the same dataset simultaneously, with features
+    such as shared annotations, comments, and real-time updates.\n   - The system
+    should be adaptive, capable of dynamically adjusting its analysis based on user
+    feedback or new data inputs, such as refining data transformations or recalculating
+    correlations.\n   - It should provide version control and history tracking for
+    all changes made to the datasets and analysis results, ensuring transparency and
+    reproducibility.\n\n\n2. Project structure:\n   - solution.py (main implementation)\n\
+    \n3. Development process:\n   - Developer: Create the code.\n   - Developer: Revise
+    the code.\n   - Developer: Optimize the code.\n\nIf there are multiple files,
+    please put them all in solution.py, but remember to add the file name in the following
+    format:\n```python\n# file_name_1.py\n# your code here\n\n# file_name_2.py\n#
+    your code here\n\n# file_name_3.py\n# your code here\n```\n\nPlease work together
+    to complete this task following software engineering best practices."
   output_format: 'The final deliverable should include:
 
     solution.py
@@ -126,4 +131,4 @@ engine_planner:
     coordination.
 output:
   format: jsonl
-  file_path: result/coding/coding_qwen3_30b_output.jsonl
+  file_path: result/coding/coding_gpt_output.jsonl
