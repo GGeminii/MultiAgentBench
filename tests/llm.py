@@ -3,9 +3,7 @@ import os
 from exceptiongroup import catch
 from litellm import completion
 from litellm.types.utils import Message
-
-XIAOMI_MODEL = "openrouter/xiaomi/mimo-v2-flash:free"  # 自定义模型标识
-OLLAMA_MODE = "openrouter/qwen/qwen3-next-80b-a3b-instruct:free"
+MODEL = "openrouter/qwen/qwen3-32b"
 if __name__ == "__main__":
     try:
         os.environ["OPENROUTER_API_KEY"] = ""
@@ -34,7 +32,7 @@ if __name__ == "__main__":
             stream=False,
             tools=tools,
             tool_choice="auto",
-            model=OLLAMA_MODE,  # 自定义模型名
+            model=MODEL,  # 自定义模型名
             messages=[
                 {"role": "user", "content": "你好，今天北京天气如何"}  # 对话消息
             ]

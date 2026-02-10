@@ -3,6 +3,7 @@ Main entry point for running the Marble simulation engine.
 """
 
 import argparse
+import io
 import logging
 import os
 import sys
@@ -67,5 +68,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     # TODO 配置环境变量
+    # 标准输出为 UTF-8 编码，适配 Windows 终端
+    # sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     logging.basicConfig(level=logging.INFO)
     main()
