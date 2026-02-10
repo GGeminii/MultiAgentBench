@@ -20,43 +20,46 @@ relationships:
   -   - agent3
       - agent2
       - collaborates with
-llm: gpt-4o-mini
+llm: openrouter/meta-llama/llama-3.1-70b-instruct
 environment:
   type: Coding
   name: Coding Competition Environment
   workspace_dir: workspace
   max_iterations: 5
 task:
-  content: "Software Development Task:\n\nPlease write a program called Data_Analyst_Collaborator
-    that facilitates collaborative data analysis among multiple users or agents. Data_Analyst_Collaborator
-    is a software application designed to enable a team of users or AI agents to collectively
-    analyze and interpret complex datasets. It provides tools for data profiling,
-    merging, and correlation analysis, and supports real-time collaboration, allowing
-    team members to work together, share insights, and adapt their analysis based
-    on collective feedback.\n1. Implementation requirements:\n   - The program should
-    support the import of multiple datasets in various formats (CSV, Excel, JSON).\n\
-    \   - It should provide a user-friendly interface for data profiling, including
-    automatic detection of data types, identification of missing values, and generation
-    of summary statistics and visualizations.\n   - The program must enable users
-    or agents to merge datasets based on common fields, with options for horizontal
-    and vertical merging, and automatic handling of data type inconsistencies.\n \
-    \  - It should include a correlation analysis module that calculates and visualizes
-    correlation coefficients (Pearson, Spearman) between selected variables, and allows
-    users to explore relationships through interactive scatter plots and correlation
-    matrices.\n   - The application must support real-time collaboration, allowing
-    multiple users or agents to work on the same dataset simultaneously, with features
-    such as shared annotations, comments, and real-time updates.\n   - The system
-    should be adaptive, capable of dynamically adjusting its analysis based on user
-    feedback or new data inputs, such as refining data transformations or recalculating
-    correlations.\n   - It should provide version control and history tracking for
-    all changes made to the datasets and analysis results, ensuring transparency and
-    reproducibility.\n\n\n2. Project structure:\n   - solution.py (main implementation)\n\
-    \n3. Development process:\n   - Developer: Create the code.\n   - Developer: Revise
-    the code.\n   - Developer: Optimize the code.\n\nIf there are multiple files,
-    please put them all in solution.py, but remember to add the file name in the following
-    format:\n```python\n# file_name_1.py\n# your code here\n\n# file_name_2.py\n#
-    your code here\n\n# file_name_3.py\n# your code here\n```\n\nPlease work together
-    to complete this task following software engineering best practices."
+  content: "Software Development Task:\n\nPlease write a web application called ArtCollab
+    that facilitates collaborative digital art creation among multiple users. ArtCollab
+    is a real-time, multi-user web application that allows artists to work together
+    on a single canvas, providing a suite of tools for drawing, painting, and editing,
+    with real-time synchronization of changes.\n1. Implementation requirements:\n\
+    \   - Frontend: Develop a responsive web interface using HTML, CSS, and JavaScript
+    (React.js preferred) that supports real-time collaboration. The interface should
+    include tools for drawing, painting, and editing, such as brush tools, color pickers,
+    and layer management. Implement real-time updates using WebSockets to ensure all
+    users see changes as they are made.\n   - Backend: Create a robust backend server
+    using Node.js and Express.js that handles real-time communication between clients.
+    Implement user authentication and session management to ensure secure access.
+    The server should manage canvas state and synchronize changes across all connected
+    clients. Use a database (such as MongoDB) to store user data, project files, and
+    collaboration history.\n   - Database: Design a database schema to store user
+    accounts, project metadata, and collaboration sessions. Ensure that the database
+    can efficiently handle real-time updates and support multiple concurrent users.
+    Implement backup and recovery mechanisms to prevent data loss.\n   - Security:
+    Implement security measures to protect user data and prevent unauthorized access.
+    Use secure protocols for communication (HTTPS, WSS) and store sensitive information
+    (such as passwords) securely using encryption. Implement rate limiting and input
+    validation to prevent common web vulnerabilities.\n   - Performance: Optimize
+    the application to handle a large number of concurrent users and ensure low latency
+    for real-time collaboration. Implement efficient data structures and algorithms
+    to manage canvas state and updates. Use caching and load balancing techniques
+    to improve performance and scalability.\n\n\n2. Project structure:\n   - solution.py
+    (main implementation)\n\n3. Development process:\n   - Developer: Create the code.\n\
+    \   - Developer: Revise the code.\n   - Developer: Optimize the code.\n\nIf there
+    are multiple files, please put them all in solution.py, but remember to add the
+    file name in the following format:\n```python\n# file_name_1.py\n# your code here\n\
+    \n# file_name_2.py\n# your code here\n\n# file_name_3.py\n# your code here\n```\n\
+    \nPlease work together to complete this task following software engineering best
+    practices."
   output_format: 'The final deliverable should include:
 
     solution.py
@@ -131,4 +134,4 @@ engine_planner:
     coordination.
 output:
   format: jsonl
-  file_path: result/coding/coding_gpt_output.jsonl
+  file_path: result/coding/coding_llama31_70b_output.jsonl

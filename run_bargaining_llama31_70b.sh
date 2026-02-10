@@ -9,7 +9,7 @@ LOG_DIR=$(dirname "$LOG_BASE_PATH")
 mkdir -p "$LOG_DIR"
 
 # 循环100次（从1到100）
-for ((i=1; i<=5; i++))
+for ((i=22; i<=22; i++))
 do
     # 拼接当前次数对应的配置文件完整路径
     CONFIG_FILE="${CONFIG_BASE_PATH}${i}.yaml"

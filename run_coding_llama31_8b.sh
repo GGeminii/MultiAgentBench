@@ -14,7 +14,7 @@ SOLUTION_LOG_DIR="logs/coding_solution/${safe_model_name}"
 
 mkdir -p ${SOLUTION_LOG_DIR}
 
-for id in {10..14}; do
+for id in {15..19}; do
     echo "Processing task with ID=$id..."
     rm -rf ${WORKSPACE_DIR}/*
     python ${UPDATE_SCRIPT} --benchmark_id ${id}

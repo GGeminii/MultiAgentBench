@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Tagtable name="1 - From A to B">
+  <!-- exported by FACTORY I/O version 2.5.8 -->
+  <Tag type="Bool" addr="I0.0">Start Button</Tag>
+  <Tag type="Bool" addr="I0.1">Exit Sensor</Tag>
+  <Tag type="Bool" addr="Q0.0">Start Light</Tag>
+  <Tag type="Bool" addr="Q0.1">Conveyor One</Tag>
+</Tagtable>
