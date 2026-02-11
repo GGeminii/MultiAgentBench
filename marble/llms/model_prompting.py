@@ -33,8 +33,6 @@ def model_prompting(
         base_url = "https://api.deepseek.com/v1"
     elif "gpt" in llm_model:
         base_url = "https://api.deerapi.com/v1"
-        # TODO 配置第三方APIKEY
-        api_key = ""
     else:
         base_url = None
     try:

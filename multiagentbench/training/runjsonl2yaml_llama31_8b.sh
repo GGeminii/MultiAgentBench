@@ -3,13 +3,13 @@
 
 # Define variables for the parameters
 INPUT_FILE="./training/training_main.jsonl"
-OUTPUT_FOLDER="./training/dataset/training-qwen3-30b"
+OUTPUT_FOLDER="./training/dataset/training-llama31-8b"
 DEFAULT_COORDINATE_MODE="graph"
 DEFAULT_ENVIRONMENT='{"max_iterations": 5, "name": "Training Collaboration Environment", "type": "Training"}'
-DEFAULT_LLM="openrouter/qwen/qwen3-30b-a3b-instruct-2507"
+DEFAULT_LLM="openrouter/meta-llama/llama-3.1-8b-instruct"
 DEFAULT_MEMORY='{"type": "BaseMemory"}'
 DEFAULT_METRICS_EVALUATE_LLM="deepseek/deepseek-chat"
-DEFAULT_OUTPUT='{"file_path": "result/training/training_qwen3_30b_output.jsonl"}'
+DEFAULT_OUTPUT='{"file_path": "result/training/training_llama31_8b_output.jsonl"}'
 
 # Run the jsonl_to_yaml.py script with the parameters
 python3 jsonl2yaml.py \

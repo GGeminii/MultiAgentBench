@@ -5,14 +5,17 @@ from .minecraft_env import MinecraftEnvironment
 from .research_env import ResearchEnvironment
 from .web_env import WebEnvironment
 from .world_env import WorldSimulationEnvironment
+from .training_env import TrainingEnvironment
 
 __all__ = [
     "BaseEnvironment",
     "DBEnvironment",
     "WebEnvironment",
     "ResearchEnvironment",
-    "CodingEnvironment" "MinecraftEnvironment",
+    "CodingEnvironment",
+    "MinecraftEnvironment",
     "ResearchEnvironment",
+    "TrainingEnvironment",
     "WebEnvironment",
     "WorldSimulationEnvironment",
 ]

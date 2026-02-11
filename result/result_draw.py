@@ -183,13 +183,15 @@ def efficiency_study():
     plt.rcParams['font.size'] = 33
 
     # -------------------------- 数据 --------------------------
-    scenarios = ['研究协作', '编程合作', '价格商议']
-    baseline_time = [26.50, 25.48, 7.14]
-    our_time = [28.75, 9.47, 7.38]
+    scenarios = ['培训规程\n提取','研究协作', '编程合作', '价格商议']
+    baseline_time = [12.56, 26.50, 25.48, 7.14]
+    baseline_token = [774279, 340089, 734046, 144547]
+    our_time = [7.45, 28.75, 9.47, 7.38]
+    our_token = [311728, 389868, 237190, 167149]
 
     # 核心修改1：Token数据换算为「十万」为单位（除以100000）
-    baseline_token = [340089 / 100000, 734046 / 100000, 144547 / 100000]  # 3.40/7.34/1.45
-    our_token = [389868 / 100000, 237190 / 100000, 167149 / 100000]  # 3.90/2.37/1.67
+    baseline_token = [774279 / 100000, 340089 / 100000, 734046 / 100000, 144547 / 100000]  # 3.40/7.34/1.45
+    our_token = [311728 / 100000, 389868 / 100000, 237190 / 100000, 167149 / 100000]  # 3.90/2.37/1.67
 
     # ===================== 横向合并：1行2列 =====================
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 7))
@@ -207,7 +209,7 @@ def efficiency_study():
     # 核心修改3：移除柱子内的数值文字（删除原标签代码）
 
     ax1.set_title("不同场景下的任务执行时间对比（分钟）", fontweight='bold')
-    ax1.set_xlabel("应用场景")
+    # ax1.set_xlabel("应用场景")
     ax1.set_ylabel("执行时间（分钟）")
     ax1.set_xticks(x, scenarios)
 
@@ -215,12 +217,14 @@ def efficiency_study():
     ax1.set_ylim(0, max(baseline_time) + 8)
     ax1.set_yticks(np.arange(0, max(baseline_time) + 10, 10))  # 0/5/10/15/20/25/30...
 
+    # 调整图例：缩小图标方块大小（handlelength/handleheight），避免与柱状图重叠
     ax1.legend(loc='upper right', fontsize=33,
-               columnspacing=1, handletextpad=0.8, borderpad=0)
+               columnspacing=1, handletextpad=0.8, borderpad=0,
+               handlelength=1.2, handleheight=1.2)  # 缩小图例手柄尺寸
     ax1.grid(axis='y', linestyle='--', alpha=0.7)
 
-    # (a) 标注
-    ax1.text(0.5, -0.45, '(a)', transform=ax1.transAxes,
+    # (a) 标注：下移位置（从-0.45改为-0.25），避免与文字重叠
+    ax1.text(0.5, -0.25, '(a)', transform=ax1.transAxes,
              ha='center', va='center', fontsize=33, fontweight='bold')
 
     # -------------------------------------------------------------------------
@@ -234,7 +238,7 @@ def efficiency_study():
     # 核心修改3：移除柱子内的数值文字（删除原标签代码）
 
     ax2.set_title("不同场景下的Token消耗对比", fontweight='bold')
-    ax2.set_xlabel("应用场景")
+    # ax2.set_xlabel("应用场景")
     ax2.set_ylabel("Token消耗（十万）")  # 标签已匹配单位
     ax2.set_xticks(x, scenarios)
 
@@ -242,12 +246,14 @@ def efficiency_study():
     ax2.set_ylim(0, max(baseline_token) + 1)
     ax2.set_yticks(np.arange(0, max(baseline_token) + 2, 3))  # 0/1/2/3/4/5/6/7/8...
 
+    # 调整图例：缩小图标方块大小，避免与柱状图重叠
     ax2.legend(loc='upper right', fontsize=33,
-               columnspacing=1, handletextpad=0.8, borderpad=0)
+               columnspacing=1, handletextpad=0.8, borderpad=0,
+               handlelength=1.2, handleheight=1.2)  # 缩小图例手柄尺寸
     ax2.grid(axis='y', linestyle='--', alpha=0.7)
 
-    # (b) 标注
-    ax2.text(0.5, -0.45, '(b)', transform=ax2.transAxes,
+    # (b) 标注：下移位置（从-0.45改为-0.25），避免与文字重叠
+    ax2.text(0.5, -0.25, '(b)', transform=ax2.transAxes,
              ha='center', va='center', fontsize=33, fontweight='bold')
 
     # -------------------------------------------------------------------------
@@ -266,11 +272,11 @@ def separate_efficiency_study():
     plt.rcParams['font.size'] = 23
 
     # -------------------------- 数据准备 --------------------------
-    scenarios = ['研究协作', '编程合作', '价格商议']
-    baseline_time = [26.50, 25.48, 7.14]
-    baseline_token = [340089, 734046, 144547]
-    our_time = [28.75, 9.47, 7.38]
-    our_token = [389868, 237190, 167149]
+    scenarios = ['培训规程\n提取','研究协作', '编程合作', '价格商议']
+    baseline_time = [12.56, 26.50, 25.48, 7.14]
+    baseline_token = [774279, 340089, 734046, 144547]
+    our_time = [7.45, 28.75, 9.47, 7.38]
+    our_token = [311728, 389868, 237190, 167149]
 
     # ===================== 第一张图：时间对比柱状图 =====================
     plt.figure(figsize=(12, 6))
@@ -359,8 +365,8 @@ def separate_efficiency_study():
     plt.close()
 
 if __name__ == '__main__':
-    draw_iteration_scores()
-    draw_agent_number_scores()
+    # draw_iteration_scores()
+    # draw_agent_number_scores()
     # ablation_study()
-    # efficiency_study()
+    efficiency_study()
     # separate_efficiency_study()

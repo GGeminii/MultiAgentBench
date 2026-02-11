@@ -150,8 +150,9 @@ def process_jsonl_file(file_path, evaluation_param):
 if __name__ == "__main__":
     # 使用示例
     process_jsonl_file(
-        "result/research/ablation/research_qwen3_30b_output.jsonl",
-        # "result/bargaining/ablation/bargaining_qwen3_30b_output.jsonl",
-        # "result/coding/ablation/coding_qwen3_30b_output.jsonl",
+        # "./research/ablation/research_qwen3_30b_output.jsonl",
+        # "./bargaining/ablation/bargaining_qwen3_30b_output.jsonl",
+        # "./coding/ablation/coding_qwen3_30b_output.jsonl",
+        "./training/training_gpt_output.jsonl",
         'task_evaluation'  # 可以改为 'code_quality' / 'task_evaluation'
     )

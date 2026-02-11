@@ -586,3 +586,63 @@ class Evaluator:
                 "consistency": 1,
                 "quality": 1
             }
+
+    def evaluate_task_training(self, task: str, result: str) -> None:
+        """
+        Evaluate the final training plan
+
+        Args:
+            task (str): The task description.
+            result (str): The final training plan.
+        """
+        # Get the training evaluation prompt
+        training_prompt_template = self.evaluation_prompts["training"]["task_evaluation"]["prompt"]
+        # Fill in the placeholders {task} and {result}
+        prompt = training_prompt_template.format(task=task, result=result)
+        # Call the language model
+        llm_response = model_prompting(
+            llm_model=self.llm,
+            messages=[{"role": "user", "content": prompt}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None,
+        )[0]
+        # Parse the ratings from llm_response.content
+        assert isinstance(llm_response.content, str)
+        ratings = self.parse_training_ratings(llm_response.content)
+        # Update the metrics
+        if ratings:
+            self.metrics["task_evaluation"] = ratings
+        else:
+            self.logger.error("Failed to parse research ratings.")
+
+    def parse_training_ratings(self, assistant_answer: str) -> Dict[str, int]:
+        """
+        Parse the training ratings from the assistant's answer.
+
+        Args:
+            assistant_answer (str): The assistant's answer containing the ratings.
+
+        Returns:
+            Dict[str, int]: The parsed ratings.
+        """
+        try:
+            content = assistant_answer.strip()
+
+            json_start = content.find('{')
+            json_end = content.rfind('}') + 1
+
+            if json_start >= 0 and json_end > json_start:
+                json_str = content[json_start:json_end]
+                ratings = json.loads(json_str)
+                # Ensure ratings are integers
+                ratings_dict: Dict[str, int] = {k: int(v) for k, v in ratings.items()}
+                return ratings_dict
+            else:
+                self.logger.error("No JSON found in assistant's answer.")
+                return {}
+        except json.JSONDecodeError:
+            self.logger.error("Failed to parse JSON from assistant's answer.")
+            return {}

@@ -18,6 +18,7 @@ from marble.environments import (
     ResearchEnvironment,
     WebEnvironment,
     WorldSimulationEnvironment,
+    TrainingEnvironment,
 )
 from marble.evaluator.evaluator import Evaluator
 from marble.feedback.feedback_provider import FeedbackProvider
@@ -146,6 +147,9 @@ class Engine:
         elif env_type == "DB":
             env6 = DBEnvironment(name="DB Environment", config=env_config)
             return env6
+        elif env_type == "Training":
+            env7 = TrainingEnvironment(name="Training Environment", config=env_config)
+            return env7
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
 
@@ -509,6 +513,13 @@ class Engine:
                 self.logger.info(
                     f"Code quality evaluation results: {self.evaluator.metrics['code_quality']}"
                 )
+            elif isinstance(self.environment, TrainingEnvironment):
+                iteration_data_summary = iteration_data.get("summary")
+                assert isinstance(iteration_data_summary, str)
+                self.evaluator.evaluate_task_training(self.task, iteration_data_summary)
+                summary_data["task_evaluation"] = self.evaluator.metrics[
+                    "task_evaluation"
+                ]
             self.logger.info("Engine graph-based coordination loop completed.")
 
         except Exception:
